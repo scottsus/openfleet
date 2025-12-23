@@ -1,0 +1,22 @@
+{
+  "name": "openfleet",
+  "version": "0.1.0",
+  "description": "SPAR framework agents + infinite context for OpenCode",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean",
+    "dev": "tsup src/index.ts --format esm --dts --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@opencode-ai/plugin": "^1.0.191",
+    "@opencode-ai/sdk": "^1.0.191"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0"
+  }
+}

@@ -1,0 +1,6 @@
+# AI
+.claude/tasks
+
+# Node
+dist/
+node_modules/
