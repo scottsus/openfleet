@@ -1,4 +1,5 @@
 import type { AgentConfig } from "@opencode-ai/sdk";
+
 import { defaultModel } from "../models";
 
 const SYSTEM_PROMPT = `You are the Fleet Navigator, Admiral Kunkka's chief strategist aboard Openfleet.

@@ -1,9 +1,11 @@
 import type { Plugin } from "@opencode-ai/plugin";
+
 import { configureAgents } from "./agents";
+import { logger } from "./logger";
 import { createSaveConversationTool } from "./tools/save-conversation";
 
 const OpenfleetPlugin: Plugin = async (ctx) => {
-  console.log("[openfleet] Plugin loaded");
+  logger.info("Plugin loaded");
 
   const saveConversation = createSaveConversationTool(ctx);
 

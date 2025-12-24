@@ -1,4 +1,5 @@
 import type { AgentConfig } from "@opencode-ai/sdk";
+
 import { defaultModel } from "../models";
 
 // TODO: need to make `Openfleet` replaceable with whatever client is calling it (e.g. Starfleet)
@@ -78,8 +79,7 @@ context window, so you need to manage it wisely. Good luck!
 `;
 
 export const orchestratorAgent: AgentConfig = {
-  description:
-    "Admiral of Openfleet, world class autonomous software engineering system",
+  description: "Admiral of Openfleet, world class autonomous software engineering system",
   mode: "primary",
   model: defaultModel,
   prompt: SYSTEM_PROMPT,

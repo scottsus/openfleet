@@ -1,7 +1,9 @@
-import { tool } from "@opencode-ai/plugin";
-import type { PluginInput } from "@opencode-ai/plugin";
 import { homedir } from "os";
 import * as path from "path";
+
+import { tool } from "@opencode-ai/plugin";
+import type { PluginInput } from "@opencode-ai/plugin";
+
 import { writeJournal } from "./journal";
 
 export function createSaveConversationTool(ctx: PluginInput) {
@@ -19,10 +21,7 @@ The tool will:
 3. Return the journal path for future reference
 `,
     args: {
-      note: tool.schema
-        .string()
-        .optional()
-        .describe("Optional note about what was accomplished"),
+      note: tool.schema.string().optional().describe("Optional note about what was accomplished"),
     },
 
     async execute(args, context) {
@@ -37,18 +36,12 @@ The tool will:
         return "No messages to save.";
       }
 
-      const lastAssistant = [...messages]
-        .reverse()
-        .find((m) => m.info.role === "assistant");
+      const lastAssistant = [...messages].reverse().find((m) => m.info.role === "assistant");
 
       const providerID =
-        lastAssistant?.info.role === "assistant"
-          ? lastAssistant.info.providerID
-          : "anthropic";
+        lastAssistant?.info.role === "assistant" ? lastAssistant.info.providerID : "anthropic";
       const modelID =
-        lastAssistant?.info.role === "assistant"
-          ? lastAssistant.info.modelID
-          : "claude-sonnet-4";
+        lastAssistant?.info.role === "assistant" ? lastAssistant.info.modelID : "claude-sonnet-4";
 
       const tokensBefore = messages.reduce((sum, m) => {
         if (m.info.role === "assistant") {
@@ -62,12 +55,7 @@ The tool will:
 
       // TODO: currently transcripts from oh-my-opencode with anthropic agents
       // are located in ~/.claude/transcripts as jsonl files
-      const transcriptPath = path.join(
-        homedir(),
-        ".claude",
-        "transcripts",
-        `${sessionID}.jsonl`
-      );
+      const transcriptPath = path.join(homedir(), ".claude", "transcripts", `${sessionID}.jsonl`);
 
       const journalPath = writeJournal({
         sessionID,

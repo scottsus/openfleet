@@ -1,6 +1,7 @@
 import * as fs from "fs";
-import * as path from "path";
 import { homedir } from "os";
+import * as path from "path";
+
 import type { JournalEntry } from "./types";
 
 const JOURNALS_DIR = path.join(homedir(), ".openfleet", "journals");
