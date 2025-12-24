@@ -1,18 +1,23 @@
 import { orchestratorAgent } from "./orchestrator";
+import { plannerAgent } from "./planner";
 
 export const agents = {
   openfleet: orchestratorAgent,
+  "Planner-Openfleet": plannerAgent,
 };
 
 export function configureAgents(config: { agent?: Record<string, unknown> }) {
-  console.log(
-    "[openfleet] Agents before override:",
-    Object.keys(config.agent ?? {})
-  );
-  
+  const nonOpenfleetAgents: Record<string, unknown> = {};
+  for (const [name, agent] of Object.entries(config.agent ?? {})) {
+    nonOpenfleetAgents[name] = {
+      ...(agent as Record<string, unknown>),
+      mode: "subagent",
+    };
+  }
+
   config.agent = {
+    ...nonOpenfleetAgents,
     openfleet: orchestratorAgent,
-    build: { ...(config.agent?.build ?? {}), mode: "subagent" },
-    plan: { ...(config.agent?.plan ?? {}), mode: "subagent" },
+    "Planner-Openfleet": plannerAgent,
   };
 }

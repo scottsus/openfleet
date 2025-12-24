@@ -78,9 +78,10 @@ context window, so you need to manage it wisely. Good luck!
 `;
 
 export const orchestratorAgent: AgentConfig = {
-  name: "Admiral Kunkka",
   description:
     "Admiral of Openfleet, world class autonomous software engineering system",
+  mode: "primary",
   model: defaultModel,
   prompt: SYSTEM_PROMPT,
+  color: "#00CED1",
 };

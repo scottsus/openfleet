@@ -1,16 +1,21 @@
 import type { Plugin } from "@opencode-ai/plugin";
 import { configureAgents } from "./agents";
+import { createSaveConversationTool } from "./tools/save-conversation";
 
-const OpenFleetPlugin: Plugin = async (ctx) => {
+const OpenfleetPlugin: Plugin = async (ctx) => {
   console.log("[openfleet] Plugin loaded");
 
+  const saveConversation = createSaveConversationTool(ctx);
+
   return {
+    tool: {
+      save_conversation: saveConversation,
+    },
+
     config: async (config) => {
-      console.log("[openfleet] Overriding agents");
       configureAgents(config);
-      console.log("[openfleet] Agents now:", Object.keys(config.agent ?? {}));
     },
   };
 };
 
-export default OpenFleetPlugin;
+export default OpenfleetPlugin;
