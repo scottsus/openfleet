@@ -1,10 +1,9 @@
 import * as fs from "fs";
-import { homedir } from "os";
-import * as path from "path";
 
+import { PATHS } from "../../config";
 import { logger } from "../../logger";
 
-const SESSIONS_DIR = path.join(homedir(), ".openfleet", "sessions");
+const SESSIONS_DIR = PATHS.sessions;
 const MAX_COUNTER = 999;
 
 const FILENAME_PATTERN = /^(\d{4}-\d{2}-\d{2})_(\d{3})_(.+)\.md$/;

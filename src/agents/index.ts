@@ -1,9 +1,11 @@
+import { housekeepingAgent } from "./housekeeping";
 import { orchestratorAgent } from "./orchestrator";
 import { plannerAgent } from "./planner";
 
 export const agents = {
   openfleet: orchestratorAgent,
   "Planner-Openfleet": plannerAgent,
+  housekeeping: housekeepingAgent,
 };
 
 export function configureAgents(config: { agent?: Record<string, unknown> }) {
@@ -19,5 +21,6 @@ export function configureAgents(config: { agent?: Record<string, unknown> }) {
     ...nonOpenfleetAgents,
     openfleet: orchestratorAgent,
     "Planner-Openfleet": plannerAgent,
+    housekeeping: housekeepingAgent,
   };
 }

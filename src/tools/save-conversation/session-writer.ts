@@ -1,11 +1,11 @@
 import * as fs from "fs";
-import { homedir } from "os";
 import * as path from "path";
 
+import { PATHS } from "../../config";
 import { logger } from "../../logger";
 import type { SessionEntry } from "./types";
 
-const SESSIONS_DIR = path.join(homedir(), ".openfleet", "sessions");
+const SESSIONS_DIR = PATHS.sessions;
 
 /**
  * Writes a session entry to the sessions directory.
@@ -74,6 +74,7 @@ grep '"role":"user"' "${entry.transcriptPath}"
 ---
 
 *Session saved: ${entry.savedAt}*
+
 `;
 }
 

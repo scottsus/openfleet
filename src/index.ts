@@ -1,14 +1,16 @@
-import type { Plugin } from "@opencode-ai/plugin";
+import type { Plugin, PluginInput } from "@opencode-ai/plugin";
 
 import { configureAgents } from "./agents";
+import { sleep } from "./lib/utils";
 import { logger } from "./logger";
 import { createSaveConversationTool } from "./tools/save-conversation";
-
-const FLEET_SPINNER = ["·", "•", "●", "○", "◌", "◦", " "];
+import { initializeDirectories } from "./utils/directory-init";
+import { showSpinnerToast } from "./utils/toast";
 
 const OpenfleetPlugin: Plugin = async (ctx) => {
   logger.info("Plugin loaded");
 
+  initializeDirectories();
   const saveConversation = createSaveConversationTool(ctx);
 
   return {
@@ -33,25 +35,15 @@ const OpenfleetPlugin: Plugin = async (ctx) => {
   };
 };
 
-async function showFleetToast(ctx: any): Promise<void> {
-  const totalDuration = 5000;
-  const frameInterval = 150;
-  const totalFrames = Math.floor(totalDuration / frameInterval);
+async function showFleetToast(ctx: PluginInput): Promise<void> {
+  const stopSpinner = showSpinnerToast(ctx, {
+    title: "⛴️  Openfleet",
+    message: "Admiral Kunkka is now steering opencode.",
+    variant: "info",
+  });
 
-  for (let i = 0; i < totalFrames; i++) {
-    const spinner = FLEET_SPINNER[i % FLEET_SPINNER.length];
-    await ctx.client.tui
-      .showToast({
-        body: {
-          title: `${spinner} ⛴️  Openfleet`,
-          message: "Admiral Kunkka is now steering opencode.",
-          variant: "info" as const,
-          duration: frameInterval + 50,
-        },
-      })
-      .catch(() => {});
-    await new Promise((resolve) => setTimeout(resolve, frameInterval));
-  }
+  await sleep(5000);
+  await stopSpinner();
 }
 
 export default OpenfleetPlugin;

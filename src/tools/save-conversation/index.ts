@@ -3,12 +3,18 @@ import * as path from "path";
 
 import { tool } from "@opencode-ai/plugin";
 import type { PluginInput } from "@opencode-ai/plugin";
+import type { SessionMessagesResponse } from "@opencode-ai/sdk";
 
 import { logger } from "../../logger";
+import { showSpinnerToast, showToast } from "../../utils/toast";
 import { getCurrentDate, getNextCounter } from "./counter";
 import { calculateDuration, writeSession } from "./session-writer";
 import { generateSlug, slugToTitle } from "./slug-generator";
 import type { SessionEntry } from "./types";
+
+type SessionMessage = SessionMessagesResponse[number];
+
+const MAX_CONTEXT_LENGTH = 500;
 
 export function createSaveConversationTool(ctx: PluginInput) {
   return tool({
@@ -32,6 +38,12 @@ The tool will:
     async execute(args, context) {
       const startTime = new Date();
       const { sessionID } = context;
+
+      const stopSpinner = showSpinnerToast(ctx, {
+        title: "💾 Saving Session...",
+        message: "Housekeeping in progress, please wait...",
+        variant: "info",
+      });
 
       try {
         const { data: messages } = await ctx.client.session.messages({
@@ -77,6 +89,9 @@ The tool will:
         };
 
         const sessionPath = writeSession(entry);
+        logger.info("Session saved", { path: sessionPath });
+
+        const sessionFilename = `${date}_${counter}_${slug}.md`;
 
         const lastAssistant = [...messages].reverse().find((m) => m.info.role === "assistant");
         const providerID =
@@ -84,6 +99,8 @@ The tool will:
         const modelID =
           lastAssistant?.info.role === "assistant" ? lastAssistant.info.modelID : "claude-sonnet-4";
 
+        // somehow, this MUST NOT be awaited, otherwise we don't
+        // see the compaction tokens streaming in real time
         ctx.client.session
           .summarize({
             path: { id: sessionID },
@@ -94,25 +111,42 @@ The tool will:
             logger.error("Summarize failed", err);
           });
 
-        await ctx.client.tui.showToast({
-          body: {
-            title: "Session Saved",
-            message: `${date}_${counter}_${slug}.md`,
-            variant: "success",
-            duration: 3000,
-          },
-        });
+        // similarly, we DON'T AWAIT here as it somehow blocks the compaction tokens
+        // and instead render a toast that says housekeeping is in progress
+        spawnHousekeepingAgent(ctx, {
+          sessionFilename,
+          sessionID,
+          sessionTitle: title,
+        })
+          .then(async () => {
+            await stopSpinner();
+            await showToast(ctx, {
+              title: "✅ Session Saved",
+              message: `${sessionFilename} - Housekeeping complete`,
+              variant: "success",
+              duration: 3000,
+            });
+          })
+          .catch(async (error) => {
+            logger.error("Housekeeping failed", error);
+            await stopSpinner();
+            await showToast(ctx, {
+              title: "⚠️ Session Saved",
+              message: "Housekeeping failed (check logs)",
+              variant: "warning",
+              duration: 3000,
+            });
+          });
 
         return `✅ Conversation saved!
 
-**Session**: \`${date}_${counter}_${slug}.md\`
+**Session**: \`${sessionFilename}\`
 **Title**: ${title}
 **Path**: ${sessionPath}
 **Messages**: ${messages.length}
 **Tokens**: ${tokensBefore.toLocaleString()} (${tokensInput.toLocaleString()} in, ${tokensOutput.toLocaleString()} out)
 
-Context compaction triggered. The conversation will be summarized.
-To recall details later, check the session file or grep the transcript.`;
+Housekeeping and compaction running in background.`;
       } catch (error) {
         logger.error("Failed to save conversation", error);
         return `❌ Failed to save conversation: ${error}`;
@@ -121,7 +155,76 @@ To recall details later, check the session file or grep the transcript.`;
   });
 }
 
-function calculateTokens(messages: any[]): {
+async function spawnHousekeepingAgent(
+  ctx: PluginInput,
+  params: {
+    sessionFilename: string;
+    sessionID: string;
+    sessionTitle: string;
+  },
+): Promise<void> {
+  logger.info("Spawning housekeeping agent", params);
+
+  try {
+    const { data: childSession, error: createError } = await ctx.client.session.create({
+      body: {
+        parentID: params.sessionID,
+        title: `Housekeeping: ${params.sessionTitle}`,
+      },
+      query: {
+        directory: ctx.directory,
+      },
+    });
+
+    if (createError || !childSession) {
+      logger.error("Failed to create housekeeping child session", createError);
+      throw new Error(`Failed to create child session: ${createError}`);
+    }
+
+    logger.info("Child session created for housekeeping", {
+      childSessionID: childSession.id,
+      parentSessionID: params.sessionID,
+    });
+
+    const housekeepingMessage = `Session saved: ${params.sessionFilename}
+
+Session Details:
+- Session ID: ${params.sessionID}
+- Title: ${params.sessionTitle}
+- Saved at: ${new Date().toISOString()}
+`;
+
+    const { error: promptError } = await ctx.client.session.prompt({
+      path: { id: childSession.id },
+      body: {
+        agent: "housekeeping",
+        parts: [
+          {
+            type: "text",
+            text: housekeepingMessage,
+          },
+        ],
+      },
+      query: {
+        directory: ctx.directory,
+      },
+    });
+
+    if (promptError) {
+      logger.error("Housekeeping agent execution failed", promptError);
+      throw new Error(`Housekeeping agent failed: ${promptError}`);
+    }
+
+    logger.info("Housekeeping agent completed successfully", {
+      childSessionID: childSession.id,
+    });
+  } catch (error) {
+    logger.error("Housekeeping agent spawn failed", error);
+    throw error;
+  }
+}
+
+function calculateTokens(messages: SessionMessage[]): {
   tokensInput: number;
   tokensOutput: number;
   tokensBefore: number;
@@ -130,9 +233,9 @@ function calculateTokens(messages: any[]): {
   let tokensOutput = 0;
 
   for (const message of messages) {
-    if (message.role === "assistant" && message.tokens) {
-      tokensInput += message.tokens.input ?? 0;
-      tokensOutput += message.tokens.output ?? 0;
+    if (message.info.role === "assistant") {
+      tokensInput += message.info.tokens.input ?? 0;
+      tokensOutput += message.info.tokens.output ?? 0;
     }
   }
 
@@ -143,27 +246,34 @@ function calculateTokens(messages: any[]): {
   };
 }
 
-async function generateSummary(messages: any[], slug: string): Promise<string> {
+async function generateSummary(messages: SessionMessage[], slug: string): Promise<string> {
   const messageCount = messages.length;
-  const userMessages = messages.filter((m) => m.role === "user").length;
-  const assistantMessages = messages.filter((m) => m.role === "assistant").length;
+  const userMessages = messages.filter((m) => m.info.role === "user").length;
+  const assistantMessages = messages.filter((m) => m.info.role === "assistant").length;
 
   return `Work session focused on: ${slugToTitle(
     slug,
   )}. Exchanged ${messageCount} messages (${userMessages} user, ${assistantMessages} assistant). See transcript for full details.`;
 }
 
-function buildContextString(messages: any[], note?: string): string {
+function buildContextString(messages: SessionMessage[], note?: string): string {
   if (note) {
-    return note;
+    return note.slice(0, MAX_CONTEXT_LENGTH);
   }
 
   const lastUserMessages = messages
-    .filter((m) => m.role === "user")
+    .filter((m) => m.info.role === "user")
     .slice(-3)
-    .map((m) => m.summary?.title || m.summary?.body || "")
+    .map((m) => {
+      const summary = m.info.summary;
+      if (typeof summary === "object" && summary) {
+        return summary.title || summary.body || "";
+      }
+      return "";
+    })
     .filter(Boolean)
-    .join(". ");
+    .join(". ")
+    .slice(0, MAX_CONTEXT_LENGTH);
 
   return lastUserMessages || "Work session";
 }

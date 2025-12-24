@@ -17,3 +17,4 @@ export const models = {
 } as const;
 
 export const defaultModel = models.anthropic.sonnet;
+export const smallModel = models.anthropic.haiku;
