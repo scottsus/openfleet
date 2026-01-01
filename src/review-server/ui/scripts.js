@@ -92,7 +92,9 @@ function render() {
   app.innerHTML = `
     <header class="review-header">
       <div class="review-title">
-        <span class="doc-icon">📄</span>
+        <div class="doc-icon-container">
+          <i data-lucide="file-text" style="width:20px; height:20px;"></i>
+        </div>
         <h1>${escapeHtml(docName)}</h1>
       </div>
       <div class="review-meta">
@@ -119,40 +121,13 @@ function render() {
       </aside>
     </main>
 
-    <button class="add-comment-btn" id="addCommentBtn" onclick="openCommentModal()">
-      💬 Add Comment
-    </button>
-
-    <div class="modal-overlay hidden" id="commentModal">
-      <div class="modal-content">
-        <h3>Add Comment</h3>
-        <p class="line-indicator">Lines <span id="modalLineRange"></span></p>
-        <textarea class="modal-textarea" id="commentBody" placeholder="Enter your comment..."></textarea>
-        <div class="modal-actions">
-          <button class="btn-cancel" onclick="closeCommentModal()">Cancel</button>
-          <button class="btn-submit" id="submitCommentBtn" onclick="submitComment()">Add Comment</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal-overlay hidden" id="replyModal">
-      <div class="modal-content">
-        <h3>Reply to Comment</h3>
-        <textarea class="modal-textarea" id="replyBody" placeholder="Enter your reply..."></textarea>
-        <div class="modal-actions">
-          <button class="btn-cancel" onclick="closeReplyModal()">Cancel</button>
-          <button class="btn-submit" onclick="submitReply()">Reply</button>
-        </div>
-      </div>
-    </div>
-
     <footer class="review-actions ${state.review.status !== "pending_review" ? "hidden" : ""}" id="reviewActions">
       <div class="action-buttons">
         <button class="btn-request-changes" onclick="submitReview('request_changes')">
-          ❌ Request Changes
+          <i data-lucide="x" style="width:16px; height:16px; display:inline-block; vertical-align:middle; margin-right:4px;"></i> Request Changes
         </button>
         <button class="btn-approve" onclick="submitReview('approve')">
-          ✅ Approve
+          <i data-lucide="check" style="width:16px; height:16px; display:inline-block; vertical-align:middle; margin-right:4px;"></i> Approve
         </button>
       </div>
     </footer>
@@ -160,6 +135,7 @@ function render() {
 
   renderDocument();
   renderThreads();
+  lucide.createIcons();
 }
 
 function renderDocument() {
@@ -188,7 +164,10 @@ function renderDocument() {
 
       return `
       <div class="${classes.join(" ")}" data-line="${lineNum}" onclick="handleLineClick(event, ${lineNum})">
-        <div class="line-number">${lineNum}</div>
+        <div class="line-number">
+          <i data-lucide="plus" class="line-add-icon"></i>
+          <span class="line-number-text">${lineNum}</span>
+        </div>
         <div class="line-content">${escapeHtml(line) || " "}</div>
       </div>
     `;
@@ -196,6 +175,7 @@ function renderDocument() {
     .join("");
 
   viewer.innerHTML = html;
+  lucide.createIcons();
 }
 
 function renderThreads() {
@@ -220,11 +200,18 @@ function renderThreads() {
   if (filteredThreads.length === 0) {
     list.innerHTML = `
       <div class="empty-state">
-        <div class="empty-state-icon">💬</div>
-        <p>${state.filter === "all" ? "No comments yet" : "No " + state.filter + " comments"}</p>
-        <p style="font-size: 12px; margin-top: 8px;">Click on line numbers to add a comment</p>
+        <div class="empty-state-icon">
+          <i data-lucide="message-square" style="width:24px; height:24px;"></i>
+        </div>
+        <p class="empty-text">
+          ${state.filter === "all" ? "No comments yet" : "No " + state.filter + " comments"}
+        </p>
+        <p style="font-size: 13px; margin-top: 8px; color: var(--text-secondary);">
+          Select a line number to start a discussion
+        </p>
       </div>
     `;
+    lucide.createIcons();
     return;
   }
 
@@ -235,7 +222,8 @@ function renderThreads() {
           ? "Line " + thread.lineStart
           : "Lines " + thread.lineStart + "-" + thread.lineEnd;
 
-      const authorLabel = thread.author === "human" ? "👤 Human" : "🤖 Agent";
+      const authorIcon = thread.author === "human" ? "user" : "bot";
+      const authorLabel = thread.author === "human" ? "Human" : "Agent";
       const time = formatTime(thread.createdAt);
 
       return `
@@ -243,13 +231,15 @@ function renderThreads() {
         <div class="thread-header">
           <span class="thread-lines" onclick="scrollToLine(${thread.lineStart})">${lineRange}</span>
           <div class="thread-status">
-            ${thread.resolved ? '<span class="resolved-badge">✓ Resolved</span>' : ""}
+            ${thread.resolved ? '<span class="resolved-badge"><i data-lucide="check" style="width:12px; height:12px; margin-right:4px;"></i> Resolved</span>' : ""}
           </div>
         </div>
         <div class="thread-body">
           <div class="comment-content">${escapeHtml(thread.body)}</div>
           <div class="comment-meta">
-            <span class="author-badge ${thread.author}">${authorLabel}</span>
+            <span class="author-badge ${thread.author}">
+              <i data-lucide="${authorIcon}" style="width:12px; height:12px; margin-right:4px;"></i> ${authorLabel}
+            </span>
             <span class="comment-time">${time}</span>
           </div>
         </div>
@@ -259,13 +249,16 @@ function renderThreads() {
           <div class="replies-section">
             ${thread.replies
               .map((reply) => {
-                const replyAuthorLabel = reply.author === "human" ? "👤 Human" : "🤖 Agent";
+                const replyAuthorIcon = reply.author === "human" ? "user" : "bot";
+                const replyAuthorLabel = reply.author === "human" ? "Human" : "Agent";
                 const replyTime = formatTime(reply.createdAt);
                 return `
                 <div class="reply-item">
                   <div class="comment-content">${escapeHtml(reply.body)}</div>
                   <div class="comment-meta">
-                    <span class="author-badge ${reply.author}">${replyAuthorLabel}</span>
+                    <span class="author-badge ${reply.author}">
+                       <i data-lucide="${replyAuthorIcon}" style="width:12px; height:12px; margin-right:4px;"></i> ${replyAuthorLabel}
+                    </span>
                     <span class="comment-time">${replyTime}</span>
                   </div>
                 </div>
@@ -276,8 +269,8 @@ function renderThreads() {
         `
             : ""
         }
-        <div class="thread-actions">
-          <button class="btn-small" onclick="openReplyModal('${thread.id}')">Reply</button>
+        <div class="thread-actions" id="thread-actions-${thread.id}">
+          <button class="btn-small" onclick="showInlineReplyForm('${thread.id}')">Reply</button>
           ${
             thread.resolved
               ? '<button class="btn-small unresolve" onclick="toggleResolved(\'' +
@@ -292,6 +285,8 @@ function renderThreads() {
     `;
     })
     .join("");
+
+  lucide.createIcons();
 }
 
 // Line Selection
@@ -308,32 +303,55 @@ function handleLineClick(event, lineNum) {
   }
 
   renderDocument();
-  updateAddCommentButton();
+  renderInlineCommentForm();
 }
 
-function updateAddCommentButton() {
-  const btn = document.getElementById("addCommentBtn");
-  if (!btn) return;
+function removeInlineCommentForm() {
+  const existing = document.querySelector(".inline-comment-form");
+  if (existing) {
+    existing.remove();
+  }
+}
 
-  if (state.selectedLines) {
-    btn.classList.add("visible");
+function renderInlineCommentForm() {
+  removeInlineCommentForm();
 
-    const selectedLine = document.querySelector(".document-line.selected");
-    if (selectedLine) {
-      const lineRect = selectedLine.getBoundingClientRect();
-      const panelRect = document.querySelector(".document-panel").getBoundingClientRect();
+  if (!state.selectedLines) return;
 
-      const topPosition = Math.max(
-        80,
-        Math.min(lineRect.top + window.scrollY, window.innerHeight - 60),
-      );
-      const leftPosition = panelRect.left + 60;
+  const endLineNum = state.selectedLines.end;
+  const lineEl = document.querySelector(`.document-line[data-line="${endLineNum}"]`);
+  if (!lineEl) return;
 
-      btn.style.top = topPosition + "px";
-      btn.style.left = leftPosition + "px";
-    }
-  } else {
-    btn.classList.remove("visible");
+  const lineContent = state.document.lines[endLineNum - 1];
+  const lineLabel =
+    state.selectedLines.start === state.selectedLines.end
+      ? `Line ${state.selectedLines.start}`
+      : `Lines ${state.selectedLines.start}-${state.selectedLines.end}`;
+
+  const formHtml = `
+    <div class="inline-comment-form">
+      <div class="comment-context">
+        <span class="comment-line-label">${lineLabel}</span>
+        <code class="comment-line-content">${escapeHtml(lineContent.trim())}</code>
+      </div>
+      <textarea class="inline-textarea" id="inlineCommentBody" placeholder="Leave a comment..."></textarea>
+      <div class="comment-actions">
+        <button class="btn-ghost" onclick="clearSelection()">Cancel</button>
+        <button class="btn-primary" id="submitInlineCommentBtn" onclick="submitInlineComment()">Add Comment</button>
+      </div>
+    </div>
+  `;
+
+  lineEl.insertAdjacentHTML("afterend", formHtml);
+
+  const textarea = document.getElementById("inlineCommentBody");
+  if (textarea) {
+    textarea.focus();
+    textarea.addEventListener("keydown", (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+        submitInlineComment();
+      }
+    });
   }
 }
 
@@ -341,34 +359,66 @@ function clearSelection() {
   state.selectedLines = null;
   lastClickedLine = null;
   renderDocument();
-  updateAddCommentButton();
+  removeInlineCommentForm();
 }
 
-function openModal(modalId) {
-  const modal = document.getElementById(modalId);
-  if (!modal) return;
-
-  modal.classList.remove("hidden");
-  modal.offsetHeight;
-  modal.classList.add("visible");
-
-  const input = modal.querySelector("textarea, input");
-  if (input) input.focus();
+function removeInlineCommentForm() {
+  const existing = document.querySelector(".inline-comment-form");
+  if (existing) {
+    existing.remove();
+  }
 }
 
-function closeModal(modalId) {
-  const modal = document.getElementById(modalId);
-  if (!modal) return;
+function renderInlineCommentForm() {
+  removeInlineCommentForm();
 
-  modal.classList.remove("visible");
+  if (!state.selectedLines) return;
 
-  const handleTransitionEnd = (e) => {
-    if (e.propertyName === "opacity") {
-      modal.classList.add("hidden");
-      modal.removeEventListener("transitionend", handleTransitionEnd);
-    }
-  };
-  modal.addEventListener("transitionend", handleTransitionEnd);
+  const endLineNum = state.selectedLines.end;
+  const lineEl = document.querySelector(`.document-line[data-line="${endLineNum}"]`);
+  if (!lineEl) return;
+
+  const lineContent = state.document.lines[endLineNum - 1];
+  const lineLabel =
+    state.selectedLines.start === state.selectedLines.end
+      ? `Line ${state.selectedLines.start}`
+      : `Lines ${state.selectedLines.start}-${state.selectedLines.end}`;
+
+  const formHtml = `
+    <div class="inline-comment-form">
+      <div class="comment-context">
+        <span class="comment-line-label">${lineLabel}</span>
+        <code class="comment-line-content">${escapeHtml(lineContent.trim())}</code>
+      </div>
+      <textarea class="inline-textarea" id="inlineCommentBody" placeholder="Leave a comment..."></textarea>
+      <div class="comment-actions">
+        <button class="btn-ghost" onclick="clearSelection()">Cancel</button>
+        <button class="btn-primary" id="submitInlineCommentBtn" onclick="submitInlineComment()">Add Comment</button>
+      </div>
+    </div>
+  `;
+
+  // Insert after the line
+  lineEl.insertAdjacentHTML("afterend", formHtml);
+
+  // Focus textarea
+  const textarea = document.getElementById("inlineCommentBody");
+  if (textarea) {
+    textarea.focus();
+    // Handle Ctrl+Enter to submit
+    textarea.addEventListener("keydown", (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+        submitInlineComment();
+      }
+    });
+  }
+}
+
+function clearSelection() {
+  state.selectedLines = null;
+  lastClickedLine = null;
+  renderDocument();
+  removeInlineCommentForm();
 }
 
 function setButtonLoading(button, isLoading) {
@@ -381,31 +431,10 @@ function setButtonLoading(button, isLoading) {
   }
 }
 
-// Comment Modal
-function openCommentModal() {
-  if (!state.selectedLines) return;
-
-  const lineRange = document.getElementById("modalLineRange");
-  const textarea = document.getElementById("commentBody");
-
-  if (lineRange && textarea) {
-    lineRange.textContent =
-      state.selectedLines.start === state.selectedLines.end
-        ? state.selectedLines.start
-        : state.selectedLines.start + "-" + state.selectedLines.end;
-    textarea.value = "";
-    openModal("commentModal");
-  }
-}
-
-function closeCommentModal() {
-  closeModal("commentModal");
-}
-
-async function submitComment() {
-  const textarea = document.getElementById("commentBody");
+async function submitInlineComment() {
+  const textarea = document.getElementById("inlineCommentBody");
   const body = textarea?.value?.trim();
-  const btn = document.getElementById("submitCommentBtn");
+  const btn = document.getElementById("submitInlineCommentBtn");
 
   if (!body || !state.selectedLines) {
     showToast("Please enter a comment", "error");
@@ -432,49 +461,75 @@ async function submitComment() {
     const thread = await response.json();
     state.threads.push(thread);
 
-    closeCommentModal();
     clearSelection();
-    renderDocument();
     renderThreads();
     showToast("Comment added", "success");
   } catch (error) {
     console.error("Error adding comment:", error);
     showToast("Failed to add comment", "error");
   } finally {
-    setButtonLoading(btn, false);
+    if (btn) setButtonLoading(btn, false);
   }
 }
 
-// Reply Modal
-let currentReplyThreadId = null;
+function showInlineReplyForm(threadId) {
+  const existing = document.getElementById(`reply-form-${threadId}`);
+  if (existing) {
+    existing.querySelector("textarea")?.focus();
+    return;
+  }
 
-function openReplyModal(threadId) {
-  currentReplyThreadId = threadId;
-  const textarea = document.getElementById("replyBody");
+  const threadCard = document.querySelector(`.thread-card[data-thread-id="${threadId}"]`);
+  if (!threadCard) return;
 
-  if (textarea) {
-    textarea.value = "";
-    openModal("replyModal");
+  const formHtml = `
+      <div class="reply-form-container" id="reply-form-${threadId}" style="padding: 12px; border-top: 1px solid var(--border-color); background-color: var(--bg-tertiary);">
+          <textarea class="inline-textarea" id="reply-input-${threadId}" placeholder="Write a reply..." style="min-height: 60px; margin-bottom: 8px;"></textarea>
+          <div class="comment-actions">
+              <button class="btn-ghost" onclick="removeReplyForm('${threadId}')">Cancel</button>
+              <button class="btn-primary" id="btn-reply-${threadId}" onclick="submitInlineReply('${threadId}')">Reply</button>
+          </div>
+      </div>
+  `;
+
+  const actions = threadCard.querySelector(".thread-actions");
+  if (actions) {
+    actions.insertAdjacentHTML("beforebegin", formHtml);
+  } else {
+    threadCard.appendChild(document.createRange().createContextualFragment(formHtml));
+  }
+
+  const input = document.getElementById(`reply-input-${threadId}`);
+  if (input) {
+    input.focus();
+    input.addEventListener("keydown", (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+        submitInlineReply(threadId);
+      }
+    });
   }
 }
 
-function closeReplyModal() {
-  currentReplyThreadId = null;
-  closeModal("replyModal");
+function removeReplyForm(threadId) {
+  const form = document.getElementById(`reply-form-${threadId}`);
+  if (form) form.remove();
 }
 
-async function submitReply() {
-  const textarea = document.getElementById("replyBody");
+async function submitInlineReply(threadId) {
+  const textarea = document.getElementById(`reply-input-${threadId}`);
   const body = textarea?.value?.trim();
+  const btn = document.getElementById(`btn-reply-${threadId}`);
 
-  if (!body || !currentReplyThreadId) {
+  if (!body) {
     showToast("Please enter a reply", "error");
     return;
   }
 
+  if (btn) setButtonLoading(btn, true);
+
   try {
     const response = await fetch(
-      "/api/reviews/" + REVIEW_ID + "/threads/" + currentReplyThreadId + "/replies",
+      "/api/reviews/" + REVIEW_ID + "/threads/" + threadId + "/replies",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -487,13 +542,13 @@ async function submitReply() {
     }
 
     const reply = await response.json();
-    const thread = state.threads.find((t) => t.id === currentReplyThreadId);
+    const thread = state.threads.find((t) => t.id === threadId);
     if (thread) {
       thread.replies = thread.replies || [];
       thread.replies.push(reply);
     }
 
-    closeReplyModal();
+    removeReplyForm(threadId);
     renderThreads();
     showToast("Reply added", "success");
   } catch (error) {
@@ -562,7 +617,7 @@ async function submitReview(decision) {
     state.review.status = result.status;
 
     render();
-    showToast(decision === "approve" ? "Review approved! ✅" : "Changes requested", "success");
+    showToast(decision === "approve" ? "Review approved" : "Changes requested", "success");
   } catch (error) {
     console.error("Error submitting review:", error);
     showToast("Failed to submit review", "error");
@@ -579,6 +634,7 @@ function setFilter(filter) {
   });
 
   renderThreads();
+  lucide.createIcons();
 }
 
 // Scroll to line
@@ -638,17 +694,9 @@ function showToast(message, type) {
 
 document.addEventListener("click", (e) => {
   const isDocumentLine = e.target.closest(".document-line");
-  const isAddCommentBtn = e.target.id === "addCommentBtn" || e.target.closest("#addCommentBtn");
-  const isModal = e.target.closest(".modal-content");
-  const isModalOverlay = e.target.classList.contains("modal-overlay");
+  const isInlineForm = e.target.closest(".inline-comment-form");
 
-  if (isModalOverlay) {
-    closeCommentModal();
-    closeReplyModal();
-    return;
-  }
-
-  if (!isDocumentLine && !isAddCommentBtn && !isModal && state.selectedLines) {
+  if (!isDocumentLine && !isInlineForm && state.selectedLines) {
     clearSelection();
   }
 });
@@ -656,8 +704,6 @@ document.addEventListener("click", (e) => {
 // Handle keyboard shortcuts
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
-    closeCommentModal();
-    closeReplyModal();
     clearSelection();
   }
 });
