@@ -1,4 +1,5 @@
 import * as fs from "fs";
+import * as path from "path";
 
 import { PATHS } from "../../config";
 import { logger } from "../../logger";
@@ -6,14 +7,14 @@ import { logger } from "../../logger";
 const SESSIONS_DIR = PATHS.sessions;
 const MAX_COUNTER = 999;
 
-const FILENAME_PATTERN = /^(\d{4}-\d{2}-\d{2})_(\d{3})_(.+)\.md$/;
+const FILENAME_PATTERN = /^(\d{3})_(.+)\.md$/;
 
 /**
  * Gets the next counter for a given date.
  *
  * This function:
- * 1. scans the sessions directory for files matching the date
- * 2. extracts all counters for that date
+ * 1. looks inside the date subdirectory (sessions/YYYY-MM-DD/)
+ * 2. extracts all counters from files matching NNN_slug.md pattern
  * 3. finds the highest counter
  * 4. returns next counter (highest + 1), zero-padded to 3 digits
  *
@@ -24,13 +25,14 @@ const FILENAME_PATTERN = /^(\d{4}-\d{2}-\d{2})_(\d{3})_(.+)\.md$/;
  */
 export async function getNextCounter(date: string): Promise<string> {
   try {
-    ensureSessionsDir();
+    const dateDir = path.join(SESSIONS_DIR, date);
+    ensureDateDir(dateDir);
 
-    const files = fs.readdirSync(SESSIONS_DIR);
+    const files = fs.readdirSync(dateDir);
 
     const counters = files
       .map((file) => parseFilename(file))
-      .filter((parsed) => parsed !== null && parsed.date === date)
+      .filter((parsed) => parsed !== null)
       .map((parsed) => parsed!.counter);
 
     const highestCounter = counters.length > 0 ? Math.max(...counters) : 0;
@@ -49,23 +51,23 @@ export async function getNextCounter(date: string): Promise<string> {
   }
 }
 
-function parseFilename(filename: string): { date: string; counter: number; slug: string } | null {
+function parseFilename(filename: string): { counter: number; slug: string } | null {
   const match = filename.match(FILENAME_PATTERN);
   if (!match) return null;
 
-  const [, date, counterStr, slug] = match;
+  const [, counterStr, slug] = match;
   const counter = parseInt(counterStr, 10);
 
   if (isNaN(counter) || counter < 1 || counter > MAX_COUNTER) {
     return null;
   }
 
-  return { date, counter, slug };
+  return { counter, slug };
 }
 
-function ensureSessionsDir(): void {
-  if (!fs.existsSync(SESSIONS_DIR)) {
-    fs.mkdirSync(SESSIONS_DIR, { recursive: true });
+function ensureDateDir(dateDir: string): void {
+  if (!fs.existsSync(dateDir)) {
+    fs.mkdirSync(dateDir, { recursive: true });
   }
 }
 
@@ -95,25 +97,20 @@ export function isValidDateFormat(date: string): boolean {
  * Gets all session files for a specific date.
  */
 export function getSessionsForDate(date: string): string[] {
-  ensureSessionsDir();
+  const dateDir = path.join(SESSIONS_DIR, date);
 
-  const files = fs.readdirSync(SESSIONS_DIR);
-  return files
-    .filter((file) => {
-      const parsed = parseFilename(file);
-      return parsed !== null && parsed.date === date;
-    })
-    .sort();
+  if (!fs.existsSync(dateDir)) {
+    return [];
+  }
+
+  const files = fs.readdirSync(dateDir);
+  return files.filter((file) => parseFilename(file) !== null).sort();
 }
 
 /**
- * Builds complete filename from components.
+ * Builds filename from counter and slug (NNN_slug.md format).
  */
-export function buildFilename(date: string, counter: string, slug: string): string {
-  if (!isValidDateFormat(date)) {
-    throw new Error(`Invalid date format: ${date}`);
-  }
-
+export function buildFilename(counter: string, slug: string): string {
   if (!/^\d{3}$/.test(counter)) {
     throw new Error(`Invalid counter format: ${counter}`);
   }
@@ -122,5 +119,5 @@ export function buildFilename(date: string, counter: string, slug: string): stri
     throw new Error(`Invalid slug format: ${slug}`);
   }
 
-  return `${date}_${counter}_${slug}.md`;
+  return `${counter}_${slug}.md`;
 }

@@ -92,7 +92,8 @@ The tool will:
         const sessionPath = writeSession(entry);
         logger.info("Session saved", { path: sessionPath });
 
-        const sessionFilename = `${date}_${counter}_${slug}.md`;
+        const sessionFilename = `${counter}_${slug}.md`;
+        const sessionRelativePath = `sessions/${date}/${sessionFilename}`;
 
         const lastAssistant = [...messages].reverse().find((m) => m.info.role === "assistant");
         const providerID =
@@ -141,7 +142,7 @@ The tool will:
 
         return `✅ Conversation saved!
 
-**Session**: \`${sessionFilename}\`
+**Session**: \`${sessionRelativePath}\`
 **Title**: ${title}
 **Path**: ${sessionPath}
 **Messages**: ${messages.length}

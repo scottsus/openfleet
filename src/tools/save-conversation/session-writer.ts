@@ -11,17 +11,18 @@ const SESSIONS_DIR = PATHS.sessions;
  * Writes a session entry to the sessions directory.
  *
  * This function:
- * 1. ensures sessions directory exists
- * 2. builds filename from date, counter, and slug
+ * 1. ensures date subdirectory exists (sessions/YYYY-MM-DD/)
+ * 2. builds filename from counter and slug (NNN_slug.md)
  * 3. generates enhanced session content
  * 4. writes file atomically
  * 5. returns full file path
  */
 export function writeSession(entry: SessionEntry): string {
-  ensureSessionsDir();
+  const dateDir = path.join(SESSIONS_DIR, entry.date);
+  ensureDateDir(dateDir);
 
-  const filename = `${entry.date}_${entry.counter}_${entry.slug}.md`;
-  const filepath = path.join(SESSIONS_DIR, filename);
+  const filename = `${entry.counter}_${entry.slug}.md`;
+  const filepath = path.join(dateDir, filename);
 
   const content = buildSessionContent(entry);
 
@@ -87,9 +88,9 @@ function formatTokens(entry: SessionEntry): string {
   return entry.tokensBefore.toLocaleString();
 }
 
-function ensureSessionsDir(): void {
-  if (!fs.existsSync(SESSIONS_DIR)) {
-    fs.mkdirSync(SESSIONS_DIR, { recursive: true });
+function ensureDateDir(dateDir: string): void {
+  if (!fs.existsSync(dateDir)) {
+    fs.mkdirSync(dateDir, { recursive: true });
   }
 }
 
