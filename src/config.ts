@@ -32,6 +32,7 @@ import * as path from "path";
 export const OPENFLEET_DIR = path.join(process.cwd(), ".openfleet");
 
 export const PATHS = {
+  agentsMd: path.join(process.cwd(), "AGENTS.md"),
   root: OPENFLEET_DIR,
   status: path.join(OPENFLEET_DIR, "status"),
   statusFile: path.join(OPENFLEET_DIR, "status", "current.md"),

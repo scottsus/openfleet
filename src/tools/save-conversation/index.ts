@@ -5,9 +5,8 @@ import { tool } from "@opencode-ai/plugin";
 import type { PluginInput } from "@opencode-ai/plugin";
 import type { SessionMessagesResponse } from "@opencode-ai/sdk";
 
-import { AGENT_NAMES } from "../../agents";
+import { PATHS } from "../../config";
 import { logger } from "../../logger";
-import { showSpinnerToast, showToast } from "../../utils/toast";
 import { getCurrentDate, getNextCounter } from "./counter";
 import { calculateDuration, writeSession } from "./session-writer";
 import { generateSlug, slugToTitle } from "./slug-generator";
@@ -39,12 +38,6 @@ The tool will:
     async execute(args, context) {
       const startTime = new Date();
       const { sessionID } = context;
-
-      const stopSpinner = showSpinnerToast(ctx, {
-        title: "💾 Saving Session...",
-        message: "Housekeeping in progress, please wait...",
-        variant: "info",
-      });
 
       try {
         const { data: messages } = await ctx.client.session.messages({
@@ -101,8 +94,6 @@ The tool will:
         const modelID =
           lastAssistant?.info.role === "assistant" ? lastAssistant.info.modelID : "claude-sonnet-4";
 
-        // somehow, this MUST NOT be awaited, otherwise we don't
-        // see the compaction tokens streaming in real time
         ctx.client.session
           .summarize({
             path: { id: sessionID },
@@ -113,33 +104,6 @@ The tool will:
             logger.error("Summarize failed", err);
           });
 
-        // similarly, we DON'T AWAIT here as it somehow blocks the compaction tokens
-        // and instead render a toast that says housekeeping is in progress
-        spawnHousekeepingAgent(ctx, {
-          sessionFilename,
-          sessionID,
-          sessionTitle: title,
-        })
-          .then(async () => {
-            await stopSpinner();
-            await showToast(ctx, {
-              title: "✅ Session Saved",
-              message: `${sessionFilename} - Housekeeping complete`,
-              variant: "success",
-              duration: 3000,
-            });
-          })
-          .catch(async (error) => {
-            logger.error("Housekeeping failed", error);
-            await stopSpinner();
-            await showToast(ctx, {
-              title: "⚠️ Session Saved",
-              message: "Housekeeping failed (check logs)",
-              variant: "warning",
-              duration: 3000,
-            });
-          });
-
         return `✅ Conversation saved!
 
 **Session**: \`${sessionRelativePath}\`
@@ -148,82 +112,24 @@ The tool will:
 **Messages**: ${messages.length}
 **Tokens**: ${tokensBefore.toLocaleString()} (${tokensInput.toLocaleString()} in, ${tokensOutput.toLocaleString()} out)
 
-Housekeeping and compaction running in background.`;
+## Before compaction
+
+Update the following files to preserve context:
+
+1. **\`${PATHS.statusFile}\`** - Add this session to "Recent Sessions":
+   - \`${sessionRelativePath}\` - ${title}
+
+2. **Task docs** (if applicable) - Update any HLD/LLD with final state
+
+3. **Lessons learned** (if any) - Note anything worth capturing for Mnemosyne
+
+Compaction running in background. Complete updates now.`;
       } catch (error) {
         logger.error("Failed to save conversation", error);
         return `❌ Failed to save conversation: ${error}`;
       }
     },
   });
-}
-
-async function spawnHousekeepingAgent(
-  ctx: PluginInput,
-  params: {
-    sessionFilename: string;
-    sessionID: string;
-    sessionTitle: string;
-  },
-): Promise<void> {
-  logger.info("Spawning housekeeping agent", params);
-
-  try {
-    const { data: childSession, error: createError } = await ctx.client.session.create({
-      body: {
-        parentID: params.sessionID,
-        title: `Housekeeping: ${params.sessionTitle}`,
-      },
-      query: {
-        directory: ctx.directory,
-      },
-    });
-
-    if (createError || !childSession) {
-      logger.error("Failed to create housekeeping child session", createError);
-      throw new Error(`Failed to create child session: ${createError}`);
-    }
-
-    logger.info("Child session created for housekeeping", {
-      childSessionID: childSession.id,
-      parentSessionID: params.sessionID,
-    });
-
-    const housekeepingMessage = `Session saved: ${params.sessionFilename}
-
-Session Details:
-- Session ID: ${params.sessionID}
-- Title: ${params.sessionTitle}
-- Saved at: ${new Date().toISOString()}
-`;
-
-    const { error: promptError } = await ctx.client.session.prompt({
-      path: { id: childSession.id },
-      body: {
-        agent: AGENT_NAMES.HOUSEKEEPING,
-        parts: [
-          {
-            type: "text",
-            text: housekeepingMessage,
-          },
-        ],
-      },
-      query: {
-        directory: ctx.directory,
-      },
-    });
-
-    if (promptError) {
-      logger.error("Housekeeping agent execution failed", promptError);
-      throw new Error(`Housekeeping agent failed: ${promptError}`);
-    }
-
-    logger.info("Housekeeping agent completed successfully", {
-      childSessionID: childSession.id,
-    });
-  } catch (error) {
-    logger.error("Housekeeping agent spawn failed", error);
-    throw error;
-  }
 }
 
 function calculateTokens(messages: SessionMessage[]): {
