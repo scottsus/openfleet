@@ -4,6 +4,7 @@ import { configureAgents } from "./agents";
 import { sleep } from "./lib/utils";
 import { logger } from "./logger";
 import { createSaveConversationTool } from "./tools/save-conversation";
+import { createTranscriptHooks } from "./transcript";
 import { initializeDirectories } from "./utils/directory-init";
 import { showSpinnerToast } from "./utils/toast";
 
@@ -12,6 +13,7 @@ const OpenfleetPlugin: Plugin = async (ctx) => {
 
   logger.info("Plugin loaded");
   const saveConversation = createSaveConversationTool(ctx);
+  const transcriptHooks = createTranscriptHooks(ctx);
 
   return {
     tool: {
@@ -32,6 +34,8 @@ const OpenfleetPlugin: Plugin = async (ctx) => {
         await showFleetToast(ctx);
       }, 0);
     },
+
+    ...transcriptHooks,
   };
 };
 

@@ -66,10 +66,10 @@ cat "${entry.transcriptPath}"
 grep "keyword" "${entry.transcriptPath}"
 
 # Count tool calls
-grep '"type":"tool_use"' "${entry.transcriptPath}" | wc -l
+grep -c "^## Tool Use:" "${entry.transcriptPath}"
 
 # Extract user messages only
-grep '"role":"user"' "${entry.transcriptPath}"
+grep -A 5 "^## User Message" "${entry.transcriptPath}"
 \`\`\`
 
 ---

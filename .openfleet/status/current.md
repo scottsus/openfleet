@@ -1,8 +1,16 @@
 # Current Status
 
-**Last Updated**: 2026-01-04T04:09:33.840Z
+**Last Updated**: 2025-01-05
 **Active Story**: _none_
 **Status**: idle
+
+## Git Preference
+
+**NO COMMITS** - Do not stage or commit any changes.
+
+## Recently Completed
+
+- `openfleet-transcript-integration` (2025-01-05) - Integrated transcript recording into Openfleet, removing dependency on oh-my-opencode
 
 ## Current Work
 
@@ -14,7 +22,7 @@ _None._
 
 ## Recent Sessions
 
-- `001_investigate-openfleet-directory.md` (2026-01-04) [188 messages, 74.5K tokens] ← current session
+- Current session (2025-01-05) - Transcript integration story
 
 ---
 
@@ -22,7 +30,7 @@ _None._
 
 - Sessions today: 1
 - Sessions this week: 1
-- Last housekeeping: 2026-01-04T04:10:15Z
+- Last housekeeping: 2025-01-05
 
 ---
 

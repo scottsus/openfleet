@@ -1,12 +1,10 @@
-import { homedir } from "os";
-import * as path from "path";
-
 import { tool } from "@opencode-ai/plugin";
 import type { PluginInput } from "@opencode-ai/plugin";
 import type { SessionMessagesResponse } from "@opencode-ai/sdk";
 
 import { PATHS } from "../../config";
 import { logger } from "../../logger";
+import { getTranscriptPath } from "../../transcript";
 import { getCurrentDate, getNextCounter } from "./counter";
 import { calculateDuration, writeSession } from "./session-writer";
 import { generateSlug, slugToTitle } from "./slug-generator";
@@ -59,9 +57,7 @@ The tool will:
         const endTime = new Date();
         const duration = calculateDuration(startTime, endTime);
 
-        // TODO: currently transcripts from oh-my-opencode with anthropic agents
-        // are located in ~/.claude/transcripts as jsonl files
-        const transcriptPath = path.join(homedir(), ".claude", "transcripts", `${sessionID}.jsonl`);
+        const transcriptPath = getTranscriptPath(sessionID);
 
         const summary = await generateSummary(messages, slug);
 

@@ -49,6 +49,7 @@ export const PATHS = {
   blunders: path.join(OPENFLEET_DIR, "experience", "blunders"),
   standards: path.join(OPENFLEET_DIR, "standards"),
   reviews: path.join(OPENFLEET_DIR, "reviews"),
+  transcripts: path.join(OPENFLEET_DIR, "transcripts"),
   logFile: path.join(OPENFLEET_DIR, "openfleet.log"),
 } as const;
 

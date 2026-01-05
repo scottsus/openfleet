@@ -6,7 +6,7 @@ This is the index of accumulated experience. Consult before tackling unfamiliar 
 
 ## Recent Activity
 
-_No activity yet._
+- 2026-01-05: Added `opencode-plugin-hooks_gotchas.md` - transcript integration learnings
 
 ### Runbooks
 
@@ -14,7 +14,7 @@ _No runbooks yet._
 
 ### Troubleshooting Guides
 
-_No guides yet._
+- `opencode-plugin-hooks_gotchas.md` - UserMessage.content issue, SDK vs plugin imports, tool input caching pattern
 
 ### Lessons Learned
 
@@ -23,6 +23,44 @@ _No lessons yet._
 ### Blunders to Avoid
 
 _No blunders recorded._
+
+---
+
+## Scratchpad
+
+### Observations (not yet codified)
+
+#### Format changes mid-implementation (1 occurrence)
+
+**Observed**: 2026-01-05, Transcript Integration
+
+The original research recommended JSONL format for technical merits (append efficiency, error recovery, streaming support). After seeing JSONL output during implementation, user requested Markdown for human readability.
+
+**Assessment**: This is normal product development - stakeholder feedback overrides technical preference. Not worth a lesson since:
+
+- Every developer knows this happens
+- The right call was made (user preference wins for output format)
+- Research correctly identified tradeoffs; decision was value judgment
+
+**Action**: Monitor. If this pattern causes significant rework (>2 hours wasted) multiple times, consider a lesson about "prototype output format early for stakeholder buy-in."
+
+#### Generic programming patterns (2 occurrences in review)
+
+**Observed**: 2026-01-05, Transcript Integration Review
+
+Chiron flagged:
+
+1. Unbounded cache growth → fixed with MAX_CACHE_SIZE
+2. TOCTOU race condition → fixed with appendFile instead of check-then-write
+
+**Assessment**: These are standard programming gotchas, not Openfleet-specific. Every experienced developer should know:
+
+- Caches need bounds
+- Check-then-act patterns have race conditions
+
+The OpenCode-specific part (why we need the cache in the first place) is documented in the troubleshooting guide.
+
+**Action**: No codification needed. If review keeps catching the same class of bugs, consider adding to `standards/code-style.md`.
 
 ---
 

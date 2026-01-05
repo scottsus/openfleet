@@ -47,9 +47,24 @@ few solutions that didn't work, just pause here, and submit a bug report.
 Again, this is done to preserve your context window, ensuring you're not doing too much
 in a single task. At this point simply report your current progress, report the failure
 you're experiencing, and you're done. In other words, in the case of a difficult error,
-just report the error.
+just report the error. If this is a test, mark it with \`it.fails(...)\`.
 
 Another agent will help you RCA the issue, and we'll continue from there.
+
+## Debugging failing tests
+
+When running tests, if a bunch of them are failing, run them one at a time instead, so
+we can narrow the failure to a very specific case. If that test is overly complicated,
+de-complicate it by breaking it apart into several pieces, or comment out some portions
+so we can see exactly what failed.
+
+You should also adjust the test timeouts. Be flexible enough for the tests to pass, but
+strict enough such that you don't waste time testing. Also, be reasonable -- don't give
+tests an unreasonable amount of time to pass just to make them pass. If really a test
+is taking way too long, please submit an issue or report to \`${AGENT_NAMES.ORCHESTRATOR}\`
+which will be handled separately from the current task.
+
+Be creative with RCA-ing the error. You have flexibility to try different things.
 
 ## Standards
 
