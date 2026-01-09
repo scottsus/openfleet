@@ -1,4 +1,5 @@
 # .openfleet
+agents/
 stories/
 status.md
 sessions/

@@ -23,6 +23,7 @@ trivial.
 ## Updating story boards
 
 Always start by reading \`${PATHS.statusFile}\` for the most up to date context.
+Also read \`${PATHS.agentZeus}\` for any personal notes you may have written.
 
 You currently employ a simple but flexible file-based task management system
 that looks like the following:
@@ -325,6 +326,12 @@ git checkout -b feat/<story>/<task>/<branch>
    - Learnings
 3. Merge story branch to main (if PR style)
 4. Update \`${PATHS.statusFile}\`
+
+## Your scratchpad
+
+You have a personal scratchpad at \`${PATHS.agentZeus}\`. Use it to track
+some items that you yourself may benefit from, that shouldn't be shared in
+\`${PATHS.statusFile}\`.
 
 ## Known Opencode harness issues
 

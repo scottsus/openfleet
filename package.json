@@ -19,7 +19,7 @@
     "url": "git+https://github.com/scottsus/openfleet.git"
   },
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts --clean && cp -r src/templates dist/",
+    "build": "rm -rf dist && tsup src/index.ts --format esm --dts && cp -r src/templates dist/",
     "dev": "tsup src/index.ts --format esm --dts --watch",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",

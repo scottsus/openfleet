@@ -17,12 +17,18 @@ files before starting your current task.
 .openfleet/
 ├── README.md
 ├── status.md                # Anchor point - agent reads this first (gitignored)
+├── agents/                  # Per-agent scratchpads (gitignored)
+│   ├── Zeus.md
+│   ├── Athena.md
+│   ├── Apollo.md
+│   ├── Hercules.md
+│   ├── Chiron.md
+│   └── Mnemosyne.md
 ├── sessions/                # Agent transcripts / journals (gitignored)
 ├── stories/                 # Work organized by story/epic (gitignored)
 ├── docs/                    # Permanent documentation (committed)
 │   └── README.md
 ├── experience/              # Self-healing long term memory (committed)
-│   ├── Mnemosyne.md
 │   ├── runbooks/            # Used for recurring tasks
 │   ├── troubleshooting/     # Used for common errors
 │   ├── lessons/             # Used for learning from past mistakes

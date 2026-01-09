@@ -27,7 +27,9 @@ function copyDirectorySync(src: string, dest: string): void {
 
   for (const entry of entries) {
     const srcPath = path.join(src, entry.name);
-    const destPath = path.join(dest, entry.name);
+
+    const destName = entry.name === "gitignore.template" ? ".gitignore" : entry.name;
+    const destPath = path.join(dest, destName);
 
     if (entry.isDirectory()) {
       copyDirectorySync(srcPath, destPath);

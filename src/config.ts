@@ -5,6 +5,13 @@ import * as path from "path";
  *
  * .openfleet/                          # Project-local workspace
  * ├── status.md                        # Anchor point - always read first (gitignored)
+ * ├── agents/                          # Per-agent scratchpads (gitignored)
+ * │   ├── Zeus.md
+ * │   ├── Athena.md
+ * │   ├── Apollo.md
+ * │   ├── Hercules.md
+ * │   ├── Chiron.md
+ * │   └── Mnemosyne.md
  * ├── stories/                         # Working tree (gitignored)
  * │   └── <story-name>/
  * │       ├── README.md
@@ -23,7 +30,6 @@ import * as path from "path";
  * ├── docs/                            # Permanent only (committed)
  * │   └── <story-name>.md              # Compressed learnings
  * ├── experience/                      # Learned knowledge (committed)
- * │   ├── Mnemosyne.md
  * │   ├── runbooks/
  * │   ├── troubleshooting/
  * │   ├── lessons/
@@ -40,11 +46,17 @@ export const PATHS = {
   agentsMd: path.join(process.cwd(), "AGENTS.md"),
   root: OPENFLEET_DIR,
   statusFile: path.join(OPENFLEET_DIR, "status.md"),
+  agents: path.join(OPENFLEET_DIR, "agents"),
+  agentZeus: path.join(OPENFLEET_DIR, "agents", "Zeus.md"),
+  agentAthena: path.join(OPENFLEET_DIR, "agents", "Athena.md"),
+  agentApollo: path.join(OPENFLEET_DIR, "agents", "Apollo.md"),
+  agentHercules: path.join(OPENFLEET_DIR, "agents", "Hercules.md"),
+  agentChiron: path.join(OPENFLEET_DIR, "agents", "Chiron.md"),
+  agentMnemosyne: path.join(OPENFLEET_DIR, "agents", "Mnemosyne.md"),
   sessions: path.join(OPENFLEET_DIR, "sessions"),
   stories: path.join(OPENFLEET_DIR, "stories"),
   docs: path.join(OPENFLEET_DIR, "docs"),
   experience: path.join(OPENFLEET_DIR, "experience"),
-  experienceIndex: path.join(OPENFLEET_DIR, "experience", "Mnemosyne.md"),
   runbooks: path.join(OPENFLEET_DIR, "experience", "runbooks"),
   troubleshooting: path.join(OPENFLEET_DIR, "experience", "troubleshooting"),
   lessons: path.join(OPENFLEET_DIR, "experience", "lessons"),
