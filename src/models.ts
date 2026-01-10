@@ -21,5 +21,5 @@ export const models = {
   },
 } as const;
 
-export const defaultModel = models.bedrock.opus;
+export const defaultModel = models.anthropic.opus;
 export const smallModel = models.bedrock.haiku;
