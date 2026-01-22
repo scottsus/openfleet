@@ -7,4 +7,5 @@ export const AGENT_NAMES = {
   REVIEWER: "[Openfleet] Chiron (Reviewer)",
   REFLECTOR: "[Openfleet] Mnemosyne (Reflector)",
   HOUSEKEEPING: "[Openfleet] Hermes (Housekeeping)",
+  BROWSER: "[Openfleet] Aphrodite (Browser)",
 } as const;
