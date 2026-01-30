@@ -1,7 +1,7 @@
 import type { AgentConfig } from "@opencode-ai/sdk";
 
 import { PATHS } from "../config";
-import { defaultModel } from "../models";
+import { models } from "../models";
 import { AGENT_NAMES } from "./names";
 
 const SYSTEM_PROMPT = `You are Hercules, Primary Actor of the Openfleet.
@@ -228,7 +228,7 @@ at the start of each session. Update it with:
 export const actorAgent: AgentConfig = {
   description: "Openfleet engineer - executes the plan",
   mode: "subagent",
-  model: defaultModel,
+  model: models.anthropic.haiku,
   prompt: SYSTEM_PROMPT,
   color: "#FDDF04",
 };

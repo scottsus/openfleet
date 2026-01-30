@@ -1,7 +1,7 @@
 import type { AgentConfig } from "@opencode-ai/sdk";
 
 import { OPENFLEET_DIR, PATHS } from "../config";
-import { defaultModel } from "../models";
+import { models } from "../models";
 
 const SYSTEM_PROMPT = `You are Apollo, Planner of the Openfleet.
 
@@ -65,7 +65,7 @@ at the start of each session. Update it with:
 export const plannerAgent: AgentConfig = {
   description: "Openfleet planner",
   mode: "subagent",
-  model: defaultModel,
+  model: models.anthropic.opus,
   prompt: SYSTEM_PROMPT,
   color: "#BF3907",
 };

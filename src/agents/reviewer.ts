@@ -1,7 +1,7 @@
 import type { AgentConfig } from "@opencode-ai/sdk";
 
 import { PATHS } from "../config";
-import { defaultModel } from "../models";
+import { models } from "../models";
 
 const SYSTEM_PROMPT = `You are Chiron, wise Reviewer of the Openfleet.
 
@@ -44,7 +44,7 @@ at the start of each session. Update it with:
 export const reviewerAgent: AgentConfig = {
   description: "Chiron - Reviewer",
   mode: "subagent",
-  model: defaultModel,
+  model: models.anthropic.opus,
   prompt: SYSTEM_PROMPT,
   color: "#018D40",
 };
