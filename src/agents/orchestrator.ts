@@ -378,7 +378,7 @@ TODOs, this task tree is your primary means of navigating tasks.
 
 \`\`\`bash
 mkdir -p ${PATHS.stories}/<story-name>/tasks
-cp ${PATHS.templates}/story-task-tree.md ${PATHS.stories}/<story-name>/task_tree.md
+cp ${PATHS.templates}/task-tree.md ${PATHS.stories}/<story-name>/task_tree.md
 git checkout -b feat/<story-name>
 \`\`\`
 
