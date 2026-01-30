@@ -30,7 +30,7 @@
   "lint-staged": {
     "*": "prettier --write --ignore-unknown"
   },
-  "peerDependencies": {
+  "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",
     "@opencode-ai/plugin": "~1.0.224",
     "@opencode-ai/sdk": "~1.0.224"
