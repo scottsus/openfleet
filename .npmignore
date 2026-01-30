@@ -1,0 +1,19 @@
+# Build files
+src/
+*.ts
+!*.d.ts
+tsconfig.json
+
+# Lock files
+bun.lock
+package-lock.json
+yarn.lock
+
+# Git
+.git/
+.gitignore
+
+# Dev tools
+.husky/
+.prettierrc
+prettier.config.*
