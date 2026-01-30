@@ -1,7 +1,7 @@
 import type { AgentConfig } from "@opencode-ai/sdk";
 
 import { PATHS } from "../config";
-import { defaultModel } from "../models";
+import { models } from "../models";
 
 const SYSTEM_PROMPT = `You are Mnemosyne, introspective Reflector of the Openfleet.
 
@@ -72,7 +72,7 @@ at the start of each session. Use it for:
 export const reflectorAgent: AgentConfig = {
   description: "Mnemosyne - Reflector",
   mode: "subagent",
-  model: defaultModel,
+  model: models.anthropic.opus,
   prompt: SYSTEM_PROMPT,
   color: "#C349E9",
 };
