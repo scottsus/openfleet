@@ -1,7 +1,7 @@
 {
   "name": "openfleet",
-  "version": "0.2.0",
-  "description": "SPAR framework agents + infinite context for OpenCode",
+  "version": "0.3.0",
+  "description": "SPARR framework agents + infinite context for OpenCode",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -24,7 +24,8 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "publish-openfleet": "npm login && npm publish --access public"
   },
   "lint-staged": {
     "*": "prettier --write --ignore-unknown"
