@@ -13,7 +13,8 @@ import * as path from "path";
  * │   ├── Apollo.md
  * │   ├── Hercules.md
  * │   ├── Chiron.md
- * │   └── Mnemosyne.md
+ * │   ├── Mnemosyne.md
+ * │   └── Aphrodite.md
  * ├── stories/                         # Working tree (gitignored)
  * │   └── <story-name>/
  * │       ├── task_tree.md
@@ -38,6 +39,7 @@ import * as path from "path";
  * │   ├── lessons/
  * │   └── blunders/
  * ├── standards/                       # Prescriptive guidelines (committed)
+ * ├── screenshots/                     # Browser screenshots (gitignored)
  * ├── sessions/                        # Conversation records (gitignored)
  * ├── transcripts/                     # Legacy transcripts (gitignored)
  * └── openfleet.log
@@ -57,6 +59,7 @@ export const PATHS = {
   agentHercules: path.join(OPENFLEET_DIR, "agents", "Hercules.md"),
   agentChiron: path.join(OPENFLEET_DIR, "agents", "Chiron.md"),
   agentMnemosyne: path.join(OPENFLEET_DIR, "agents", "Mnemosyne.md"),
+  agentAphrodite: path.join(OPENFLEET_DIR, "agents", "Aphrodite.md"),
   sessions: path.join(OPENFLEET_DIR, "sessions"),
   stories: path.join(OPENFLEET_DIR, "stories"),
   docs: path.join(OPENFLEET_DIR, "docs"),
@@ -67,6 +70,7 @@ export const PATHS = {
   blunders: path.join(OPENFLEET_DIR, "experience", "blunders"),
   standards: path.join(OPENFLEET_DIR, "standards"),
   reviews: path.join(OPENFLEET_DIR, "reviews"),
+  screenshots: path.join(OPENFLEET_DIR, "screenshots"),
   transcripts: path.join(OPENFLEET_DIR, "transcripts"),
   logFile: path.join(OPENFLEET_DIR, "openfleet.log"),
 } as const;
