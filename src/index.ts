@@ -1,6 +1,7 @@
 import type { Plugin, PluginInput } from "@opencode-ai/plugin";
 
 import { configureAgents } from "./agents";
+import { createCompactionHook } from "./context";
 import { sleep } from "./lib/utils";
 import { logger } from "./logger";
 import { createSaveConversationTool } from "./tools/save-conversation";
@@ -14,6 +15,7 @@ const OpenfleetPlugin: Plugin = async (ctx) => {
   logger.info("Plugin loaded");
   const saveConversation = createSaveConversationTool(ctx);
   const transcriptHooks = createTranscriptHooks(ctx);
+  const compactionHook = createCompactionHook(ctx);
 
   return {
     tool: {
@@ -36,6 +38,7 @@ const OpenfleetPlugin: Plugin = async (ctx) => {
     },
 
     ...transcriptHooks,
+    ...compactionHook,
   };
 };
 
