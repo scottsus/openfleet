@@ -19,17 +19,21 @@ export const agents = {
   [AGENT_NAMES.HOUSEKEEPING]: housekeepingAgent,
 };
 
-export function configureAgents(config: { agent?: Record<string, unknown> }) {
-  const nonOpenfleetAgents: Record<string, unknown> = {};
+export function configureAgents(
+  config: Record<string, unknown> & { agent?: Record<string, unknown> },
+) {
+  const demotedAgents: Record<string, unknown> = {};
   for (const [name, agent] of Object.entries(config.agent ?? {})) {
-    nonOpenfleetAgents[name] = {
+    demotedAgents[name] = {
       ...(agent as Record<string, unknown>),
       mode: "subagent",
+      hidden: true,
     };
   }
 
+  config.default_agent = AGENT_NAMES.ORCHESTRATOR;
   config.agent = {
-    ...nonOpenfleetAgents,
+    ...demotedAgents,
     ...agents,
   };
 }
