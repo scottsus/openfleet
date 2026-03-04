@@ -26,6 +26,6 @@ export const models = {
   },
 } as const;
 
-export const defaultModel = models.freeModels.minimaxM25Free;
+export const defaultModel = models.anthropic.sonnet;
 export const bigModel = defaultModel;
 export const smallModel = defaultModel;
