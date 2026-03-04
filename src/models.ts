@@ -19,8 +19,13 @@ export const models = {
     gemini3Flash: "google/gemini-3-flash",
     gemini25Pro: "google/gemini-2.5-pro",
   },
+  freeModels: {
+    minimaxM25: "opencode/minimax-m2.5",
+    minimaxM25Free: "opencode/minimax-m2.5-free",
+    bigPickle: "opencode/big-pickle",
+  },
 } as const;
 
-export const defaultModel = models.anthropic.sonnet;
-export const bigModel = models.anthropic.opus;
-export const smallModel = models.bedrock.haiku;
+export const defaultModel = models.freeModels.minimaxM25Free;
+export const bigModel = defaultModel;
+export const smallModel = defaultModel;
