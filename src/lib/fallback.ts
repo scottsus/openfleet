@@ -14,6 +14,7 @@ const fallbackInProgress = new Set<string>();
 const lastFallbackTime = new Map<string, number>();
 const COOLDOWN_MS = 30_000;
 
+/** Returns true if the message contains a known Anthropic credit balance error pattern. */
 export function isCreditBalanceError(message: string): boolean {
   const lower = message.toLowerCase();
   return CREDIT_BALANCE_PATTERNS.some((p) => lower.includes(p));
@@ -47,10 +48,14 @@ export async function handleCreditBalanceFallback(
     const { data: messages } = await client.session.messages({
       path: { id: sessionID },
     });
-    if (!messages) return;
+    if (!messages || messages.length === 0) {
+      throw new Error("No messages found after abort");
+    }
 
     const lastUserMsg = [...messages].reverse().find((m) => m.info.role === "user");
-    if (!lastUserMsg) return;
+    if (!lastUserMsg) {
+      throw new Error("No user message found to revert to");
+    }
 
     const textPart = lastUserMsg.parts.find((p) => p.type === "text");
     if (!textPart || textPart.type !== "text") return;

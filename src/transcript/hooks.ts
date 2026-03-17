@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from "fs";
 import path from "path";
 
 import type { PluginInput } from "@opencode-ai/plugin";
+import type { Event } from "@opencode-ai/sdk";
 
 import { handleCreditBalanceFallback, isCreditBalanceError } from "../lib/fallback";
 import { logger } from "../logger";
@@ -92,7 +93,7 @@ export function createTranscriptHooks(ctx: PluginInput) {
       }
     }) as (input: {}, output: { system: string[] }) => Promise<void>,
 
-    event: async ({ event }: { event: { type: string; properties: any } }) => {
+    event: async ({ event }: { event: Event }) => {
       if (event.type === "session.status") {
         const { sessionID, status } = event.properties;
         if (status.type === "retry" && isCreditBalanceError(status.message)) {
@@ -102,7 +103,12 @@ export function createTranscriptHooks(ctx: PluginInput) {
 
       if (event.type === "session.error") {
         const { sessionID, error } = event.properties;
-        if (sessionID && error && isCreditBalanceError(error.data.message)) {
+        if (
+          sessionID &&
+          error &&
+          "message" in error.data &&
+          isCreditBalanceError(String(error.data.message))
+        ) {
           await handleCreditBalanceFallback(ctx.client, sessionID);
         }
       }
@@ -110,7 +116,10 @@ export function createTranscriptHooks(ctx: PluginInput) {
       if (event.type === "message.updated") {
         const { info } = event.properties;
         if (info.role === "assistant" && info.error) {
-          if (isCreditBalanceError(info.error.data.message)) {
+          if (
+            "message" in info.error.data &&
+            isCreditBalanceError(String(info.error.data.message))
+          ) {
             await handleCreditBalanceFallback(ctx.client, info.sessionID);
           }
         }
