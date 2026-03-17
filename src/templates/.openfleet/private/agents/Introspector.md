@@ -20,10 +20,6 @@ _No guides yet._
 
 _No lessons yet._
 
-### Blunders to Avoid
-
-_No blunders recorded._
-
 ---
 
 ## File Naming Conventions
@@ -51,14 +47,6 @@ Use lowercase kebab-case with suffix: `<topic>-lesson.md`
 - `prefer-composition-over-inheritance-lesson.md`
 - `batch-database-queries-lesson.md`
 - `early-return-pattern-lesson.md`
-
-### Blunders
-
-Use lowercase kebab-case with suffix: `<descriptive-name>-blunder.md`
-
-- `api-key-exposure-blunder.md`
-- `missing-null-check-blunder.md`
-- `wrong-environment-deploy-blunder.md`
 
 ---
 
@@ -137,32 +125,6 @@ Use lowercase kebab-case with suffix: `<descriptive-name>-blunder.md`
 ## Related
 
 - <Links to relevant docs, code, or external resources>
-```
-
-### Blunder
-
-```markdown
-# <Brief title describing the blunder>
-
-## What happened
-
-<Description of the mistake - what was done wrong>
-
-## Impact
-
-<What went wrong as a result - consequences>
-
-## Root cause
-
-<Why it happened - the underlying reason>
-
-## Prevention
-
-<How to avoid this in the future - proactive measures>
-
-## Detection
-
-<How to catch early if it happens again - monitoring/review steps>
 ```
 
 ---

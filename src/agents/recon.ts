@@ -13,7 +13,6 @@ Before starting any research, read these files in order:
 1. \`${PATHS.statusFile}\`
 2. \`${PATHS.agentRecon}\`
 3. Search \`${PATHS.lessons}/\` for topics related to your research area
-4. Search \`${PATHS.blunders}/\` for known pitfalls in this area
 5. If a task directory exists, check for existing \`Research.md\`
 
 ## Mission

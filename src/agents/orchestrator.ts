@@ -115,7 +115,7 @@ the SPARR framework religiously:
 
 2. PLAN
   - scope: uses existing research, gathers context on previous stories, checks
-    existing runbooks, lessons, blunders, writes comprehensive HLD + LLD
+    existing runbooks, lessons, writes comprehensive HLD + LLD
   - use: making changes to the codebase, running commands
 
 3. ACT

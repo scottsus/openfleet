@@ -22,7 +22,6 @@ defined, granular task. Otherwise you should speak up and ask for clarity.
 When you get stuck or encounter errors, pull additional context on-demand:
 - \`${PATHS.troubleshooting}/\` - Search for error messages or symptoms
 - \`${PATHS.lessons}/\` - Search for previous mistakes
-- \`${PATHS.blunders}/\` - Quick sanity check for common mistakes
 
 At the end, produce a report in \`{working_path}/Implementation.md\`, noting down:
 

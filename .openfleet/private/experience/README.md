@@ -8,8 +8,7 @@ Self-healing systems with long-term memory. Learned knowledge from past work.
 experience/
 ├── runbooks/              # How-to guides for recurring tasks
 ├── troubleshooting/       # Problem → solution mappings
-├── lessons/               # Insights and best practices
-└── blunders/              # Mistakes to avoid
+└── lessons/               # Insights, best practices, and mistakes to avoid
 ```
 
 ## Usage

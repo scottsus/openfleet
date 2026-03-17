@@ -1,7 +1,2 @@
-# .openfleet
-agents/
-stories/
-status.md
-sessions/
-transcripts/
-openfleet.log
+# private/ is machine-local and not committed
+private/

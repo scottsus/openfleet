@@ -8,7 +8,7 @@ not for humans, though it would be difficult to mess this up unintentionally.
 
 ## For Agents 🤖
 
-Understand `## Structure`, then see `./status.md`, and other necessary
+Understand `## Structure`, then see `./private/status.md`, and other necessary
 files before starting your current task.
 
 ## Structure
@@ -16,36 +16,32 @@ files before starting your current task.
 ```
 .openfleet/
 ├── README.md
-├── status.md                # Anchor point - agent reads this first (gitignored)
 ├── .templates/              # Templates for new stories/tasks
-│   └── story-task-tree.md
-├── agents/                  # Per-agent scratchpads (gitignored)
-│   ├── Zeus.md
-│   ├── Recon.md
-│   ├── Architect.md
-│   ├── Builder.md
-│   ├── Validator.md
-│   └── Introspector.md
-├── sessions/                # Agent transcripts / journals (gitignored)
-├── stories/                 # Work organized by story/epic (gitignored)
-│   └── <story-name>/
-│       ├── task_tree.md     # Story-scoped task tree
-│       ├── README.md
-│       └── tasks/
-├── docs/                    # Permanent documentation (committed)
-│   └── README.md
-├── experience/              # Self-healing long term memory (committed)
-│   ├── runbooks/            # Used for recurring tasks
-│   ├── troubleshooting/     # Used for common errors
-│   ├── lessons/             # Used for learning from past mistakes
-│   └── blunders/            # Used for learning from stupid mistakes
-├── standards/               # Prescriptive guidelines (committed)
-│   ├── code-style.md
-│   ├── architecture.md
-│   ├── testing.md
-│   └── review-checklist.md
-└── reviews/                 # Human review artifacts (committed)
-    └── README.md
+│   └── task-tree.md
+├── public/                  # Committed — shared knowledge
+│   ├── docs/                # Compressed story learnings
+│   ├── standards/           # Prescriptive guidelines
+│   │   ├── code-style.md
+│   │   ├── architecture.md
+│   │   ├── testing.md
+│   │   └── review-checklist.md
+│   └── troubleshooting/     # Common error guides
+└── private/                 # Gitignored — machine-local
+    ├── status.md            # Anchor point - agent reads this first
+    ├── agents/              # Per-agent scratchpads
+    │   ├── Zeus.md
+    │   ├── Recon.md
+    │   ├── Architect.md
+    │   ├── Builder.md
+    │   ├── Validator.md
+    │   └── Introspector.md
+    ├── stories/             # Work organized by story/epic
+    ├── experience/          # Self-healing long term memory
+    │   ├── runbooks/        # Used for recurring tasks
+    │   └── lessons/         # Used for learning from past mistakes and pitfalls
+    ├── reviews/             # Human review artifacts
+    ├── sessions/            # Agent transcripts / journals
+    └── transcripts/         # Legacy transcripts
 ```
 
 ## Git worktree visualization

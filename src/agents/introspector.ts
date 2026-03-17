@@ -29,7 +29,6 @@ When Orchestrator tells you to capture something, decide which category:
 | "This is how to do X"           | \`${PATHS.runbooks}/\`        |
 | "When X breaks, do Y"           | \`${PATHS.troubleshooting}/\` |
 | "We learned X the hard way"     | \`${PATHS.lessons}/\`         |
-| "Wasted time on stupid mistake" | \`${PATHS.blunders}/\`        |
 
 ## Introspector.md
 
@@ -63,7 +62,7 @@ to the initial context each agent loads; therefore be quite selective with what 
 You have persistent memory at \`${PATHS.agentIntrospector}\` that's loaded into your context
 at the start of each session. Use it for:
 
-- index of existing knowledge (runbooks, lessons, blunders)
+- index of existing knowledge (runbooks, lessons)
 - file naming conventions and templates
 - intermediate notes on importance/frequency before codifying
 - recent activity log and patterns observed
