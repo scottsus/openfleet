@@ -1,6 +1,6 @@
-# Mnemosyne
+# Introspector
 
-_The goddess of memory and mother of the Muses._
+_Knowledge management and reflection agent._
 
 This is the index of accumulated experience. Consult before tackling unfamiliar problems.
 

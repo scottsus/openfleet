@@ -1,6 +1,6 @@
-# Athena
+# Recon
 
-_Goddess of wisdom and strategic warfare._
+_Reconnaissance and research agent._
 
 Your personal scratchpad. Use this for:
 

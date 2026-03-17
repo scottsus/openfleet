@@ -117,7 +117,7 @@ Update the following files to preserve context:
 
 2. **Task docs** (if applicable) - Update any HLD/LLD with final state
 
-3. **Lessons learned** (if any) - Note anything worth capturing for Mnemosyne
+3. **Lessons learned** (if any) - Note anything worth capturing for Introspector
 
 Compaction running in background. Complete updates now.`;
       } catch (error) {

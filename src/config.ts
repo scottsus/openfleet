@@ -9,11 +9,11 @@ import * as path from "path";
  * │   └── task-tree.md                 # Template for story-scoped task trees
  * ├── agents/                          # Per-agent scratchpads (gitignored)
  * │   ├── Zeus.md
- * │   ├── Athena.md
- * │   ├── Apollo.md
- * │   ├── Hercules.md
- * │   ├── Chiron.md
- * │   └── Mnemosyne.md
+ * │   ├── Recon.md
+ * │   ├── Architect.md
+ * │   ├── Builder.md
+ * │   ├── Validator.md
+ * │   └── Introspector.md
  * ├── stories/                         # Working tree (gitignored)
  * │   └── <story-name>/
  * │       ├── task_tree.md
@@ -51,12 +51,12 @@ export const PATHS = {
   statusFile: path.join(OPENFLEET_DIR, "status.md"),
   templates: path.join(OPENFLEET_DIR, ".templates"),
   agents: path.join(OPENFLEET_DIR, "agents"),
-  agentZeus: path.join(OPENFLEET_DIR, "agents", "Zeus.md"),
-  agentAthena: path.join(OPENFLEET_DIR, "agents", "Athena.md"),
-  agentApollo: path.join(OPENFLEET_DIR, "agents", "Apollo.md"),
-  agentHercules: path.join(OPENFLEET_DIR, "agents", "Hercules.md"),
-  agentChiron: path.join(OPENFLEET_DIR, "agents", "Chiron.md"),
-  agentMnemosyne: path.join(OPENFLEET_DIR, "agents", "Mnemosyne.md"),
+  agentOrchestrator: path.join(OPENFLEET_DIR, "agents", "Zeus.md"),
+  agentRecon: path.join(OPENFLEET_DIR, "agents", "Recon.md"),
+  agentArchitect: path.join(OPENFLEET_DIR, "agents", "Architect.md"),
+  agentBuilder: path.join(OPENFLEET_DIR, "agents", "Builder.md"),
+  agentValidator: path.join(OPENFLEET_DIR, "agents", "Validator.md"),
+  agentIntrospector: path.join(OPENFLEET_DIR, "agents", "Introspector.md"),
   sessions: path.join(OPENFLEET_DIR, "sessions"),
   stories: path.join(OPENFLEET_DIR, "stories"),
   docs: path.join(OPENFLEET_DIR, "docs"),

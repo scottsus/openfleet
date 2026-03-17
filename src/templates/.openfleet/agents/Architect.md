@@ -1,6 +1,6 @@
-# Apollo
+# Architect
 
-_God of music, poetry, and prophecy._
+_Architecture and planning agent._
 
 Your personal scratchpad. Use this for:
 

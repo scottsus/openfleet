@@ -6,13 +6,13 @@ Guide for completing a full story using the SPARR cycle (Scout → Plan → Act 
 
 ## Prerequisites
 
-- Story created by Zeus with branch `feat/<story-name>`
+- Story created by Orchestrator with branch `feat/<story-name>`
 - Story directory exists at `.openfleet/stories/<story-name>/`
 - Task tree initialized at `.openfleet/stories/<story-name>/task-tree.md`
 
 ## Phase Breakdown
 
-### Phase 1: Scout (Athena - Research)
+### Phase 1: Scout (Recon - Research)
 
 **Purpose**: Understand the problem and explore the codebase
 
@@ -26,12 +26,12 @@ Guide for completing a full story using the SPARR cycle (Scout → Plan → Act 
 - Assess complexity and risks
 - Document findings with specific file paths and line numbers
 
-**Session management**: Create or reuse Athena session
+**Session management**: Create or reuse Recon session
 
 - Story-level: New session for initial story research
 - Task-level: Can resume same session from story research
 
-### Phase 2: Plan (Apollo - High/Low Level Design)
+### Phase 2: Plan (Architect - High/Low Level Design)
 
 **Purpose**: Design the solution architecture
 
@@ -53,7 +53,7 @@ Guide for completing a full story using the SPARR cycle (Scout → Plan → Act 
 - HLD should be reviewed before LLD (use mdreview for human review)
 - LLD should be reviewed before implementation
 
-### Phase 3: Act (Hercules - Implementation)
+### Phase 3: Act (Builder - Implementation)
 
 **Purpose**: Execute the plan and implement the solution
 
@@ -73,7 +73,7 @@ Guide for completing a full story using the SPARR cycle (Scout → Plan → Act 
 - Include build verification, content verification, package verification
 - Make tests deterministic with clear ✅/❌ output
 
-### Phase 4: Review (Chiron - Code Review)
+### Phase 4: Review (Validator - Code Review)
 
 **Purpose**: Verify implementation quality and correctness
 
@@ -85,7 +85,7 @@ Guide for completing a full story using the SPARR cycle (Scout → Plan → Act 
 - Verify acceptance criteria met
 - Approve for merge or request changes
 
-### Phase 5: Reflect (Mnemosyne - Capture Learnings)
+### Phase 5: Reflect (Introspector - Capture Learnings)
 
 **Purpose**: Codify knowledge for future reference
 

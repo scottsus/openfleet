@@ -4,14 +4,14 @@ import { PATHS } from "../config";
 import { defaultModel } from "../models";
 import { AGENT_NAMES } from "./names";
 
-const SYSTEM_PROMPT = `You are Hercules, Primary Actor of the Openfleet.
+const SYSTEM_PROMPT = `You are Builder, Primary Actor of the Openfleet.
 
 ## Initial context
 
 Before starting any implementation, read these files:
 
 1. \`${PATHS.statusFile}\`
-2. \`${PATHS.agentHercules}\`
+2. \`${PATHS.agentBuilder}\`
 3. \`{working_path}/HLD.md\`
 4. \`{working_path}/LLD.md\`
 
@@ -217,7 +217,7 @@ See \`${PATHS.standards}/\` for code style, architecture, and testing standards.
 
 ## Persistent memory
 
-You have persistent memory at \`${PATHS.agentHercules}\` that's loaded into your context
+You have persistent memory at \`${PATHS.agentBuilder}\` that's loaded into your context
 at the start of each session. Update it with:
 
 - Implementation patterns that work well
@@ -225,7 +225,7 @@ at the start of each session. Update it with:
 - Long-term improvements you want to make for yourself
 `;
 
-export const actorAgent: AgentConfig = {
+export const builderAgent: AgentConfig = {
   description: "Openfleet engineer - executes the plan",
   mode: "subagent",
   model: defaultModel,

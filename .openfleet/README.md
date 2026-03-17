@@ -21,11 +21,11 @@ files before starting your current task.
 │   └── story-task-tree.md
 ├── agents/                  # Per-agent scratchpads (gitignored)
 │   ├── Zeus.md
-│   ├── Athena.md
-│   ├── Apollo.md
-│   ├── Hercules.md
-│   ├── Chiron.md
-│   └── Mnemosyne.md
+│   ├── Recon.md
+│   ├── Architect.md
+│   ├── Builder.md
+│   ├── Validator.md
+│   └── Introspector.md
 ├── sessions/                # Agent transcripts / journals (gitignored)
 ├── stories/                 # Work organized by story/epic (gitignored)
 │   └── <story-name>/

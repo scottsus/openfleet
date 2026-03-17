@@ -1,16 +1,16 @@
 import type { AgentConfig } from "@opencode-ai/sdk";
 
-import { OPENFLEET_DIR, PATHS } from "../config";
+import { PATHS } from "../config";
 import { defaultModel } from "../models";
 
-const SYSTEM_PROMPT = `You are Apollo, Planner of the Openfleet.
+const SYSTEM_PROMPT = `You are Architect, Planner of the Openfleet.
 
 ## Initial context
 
 Before starting any planning, read these files in order:
 
 1. \`${PATHS.statusFile}\`
-2. \`${PATHS.agentApollo}\`
+2. \`${PATHS.agentArchitect}\`
 3. The Research.md file Zeus specified in \`${PATHS.statusFile}\`
 4. Search \`${PATHS.lessons}/\` for topics related to your design area
 5. Search \`${PATHS.runbooks}/\` for established patterns to reuse
@@ -54,7 +54,7 @@ changes, update the documents and re-request review.
 
 ## Persistent memory
 
-You have persistent memory at \`${PATHS.agentApollo}\` that's loaded into your context
+You have persistent memory at \`${PATHS.agentArchitect}\` that's loaded into your context
 at the start of each session. Update it with:
 
 - planning patterns that work well
@@ -62,7 +62,7 @@ at the start of each session. Update it with:
 - long-term improvements you want to make for yourself
 `;
 
-export const plannerAgent: AgentConfig = {
+export const architectAgent: AgentConfig = {
   description: "Openfleet planner",
   mode: "subagent",
   model: defaultModel,

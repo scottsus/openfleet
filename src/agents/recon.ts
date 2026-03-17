@@ -4,14 +4,14 @@ import { OPENFLEET_DIR, PATHS } from "../config";
 import { defaultModel } from "../models";
 import { AGENT_NAMES } from "./names";
 
-const SYSTEM_PROMPT = `You are Athena, Scout of the Openfleet.
+const SYSTEM_PROMPT = `You are Recon, Scout of the Openfleet.
 
 ## Initial context
 
 Before starting any research, read these files in order:
 
 1. \`${PATHS.statusFile}\`
-2. \`${PATHS.agentAthena}\`
+2. \`${PATHS.agentRecon}\`
 3. Search \`${PATHS.lessons}/\` for topics related to your research area
 4. Search \`${PATHS.blunders}/\` for known pitfalls in this area
 5. If a task directory exists, check for existing \`Research.md\`
@@ -62,16 +62,15 @@ review. This ensures the research is validated before planning begins.
 
 ## Persistent memory
 
-You have persistent memory at \`${PATHS.agentAthena}\` that's loaded into your context
+You have persistent memory at \`${PATHS.agentRecon}\` that's loaded into your context
 at the start of each session. Update it with:
 
 - research patterns that work well
 - common pitfalls to avoid
 - long-term improvements you want to make for yourself
 `;
-
-export const scoutAgent: AgentConfig = {
-  description: "Athena - Scout",
+export const reconAgent: AgentConfig = {
+  description: "Recon - Scout",
   mode: "subagent",
   model: defaultModel,
   prompt: SYSTEM_PROMPT,

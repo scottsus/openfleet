@@ -1,6 +1,6 @@
-# Chiron
+# Validator
 
-_Wisest of the centaurs, teacher of heroes._
+_Code review and quality assurance agent._
 
 Your personal scratchpad. Use this for:
 

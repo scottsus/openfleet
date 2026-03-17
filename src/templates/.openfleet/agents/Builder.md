@@ -1,6 +1,6 @@
-# Hercules
+# Builder
 
-_Divine hero known for strength and endurance._
+_Implementation and execution agent._
 
 Your personal scratchpad. Use this for:
 

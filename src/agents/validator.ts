@@ -3,14 +3,14 @@ import type { AgentConfig } from "@opencode-ai/sdk";
 import { PATHS } from "../config";
 import { defaultModel } from "../models";
 
-const SYSTEM_PROMPT = `You are Chiron, wise Reviewer of the Openfleet.
+const SYSTEM_PROMPT = `You are Validator, wise Reviewer of the Openfleet.
 
 ## Initial context
 
 Before reviewing, read these files:
 
 1. \`${PATHS.statusFile}\`
-2. \`${PATHS.agentChiron}\`
+2. \`${PATHS.agentValidator}\`
 3. \`{working_path}/HLD.md\` - as specified in status.md
 4. \`{working_path}/LLD.md\` - as specified in status.md
 5. \`${PATHS.standards}/\`
@@ -33,7 +33,7 @@ changes.
 
 ## Persistent memory
 
-You have persistent memory at \`${PATHS.agentChiron}\` that's loaded into your context
+You have persistent memory at \`${PATHS.agentValidator}\` that's loaded into your context
 at the start of each session. Update it with:
 
 - review patterns and common issues
@@ -41,8 +41,8 @@ at the start of each session. Update it with:
 - long-term improvements you want to make for yourself
 `;
 
-export const reviewerAgent: AgentConfig = {
-  description: "Chiron - Reviewer",
+export const validatorAgent: AgentConfig = {
+  description: "Validator - Reviewer",
   mode: "subagent",
   model: defaultModel,
   prompt: SYSTEM_PROMPT,
