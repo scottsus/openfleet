@@ -15,6 +15,8 @@ const OpenfleetPlugin: Plugin = async (ctx) => {
   const saveConversation = createSaveConversationTool(ctx);
   const transcriptHooks = createTranscriptHooks(ctx);
 
+  const { event: transcriptEvent, ...otherTranscriptHooks } = transcriptHooks;
+
   return {
     tool: {
       save_conversation: saveConversation,
@@ -25,17 +27,19 @@ const OpenfleetPlugin: Plugin = async (ctx) => {
     },
 
     event: async ({ event }) => {
-      if (event.type !== "session.created") return;
+      if (event.type === "session.created") {
+        const props = event.properties as { info?: { parentID?: string } } | undefined;
+        if (!props?.info?.parentID) {
+          setTimeout(async () => {
+            await showFleetToast(ctx);
+          }, 0);
+        }
+      }
 
-      const props = event.properties as { info?: { parentID?: string } } | undefined;
-      if (props?.info?.parentID) return;
-
-      setTimeout(async () => {
-        await showFleetToast(ctx);
-      }, 0);
+      await transcriptEvent({ event });
     },
 
-    ...transcriptHooks,
+    ...otherTranscriptHooks,
   };
 };
 
