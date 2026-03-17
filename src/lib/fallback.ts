@@ -52,6 +52,7 @@ export async function handleCreditBalanceFallback(
   if (last && Date.now() - last < COOLDOWN_MS) return;
 
   fallbackInProgress.add(sessionID);
+  fallbackSessions.add(sessionID);
   lastFallbackTime.set(sessionID, Date.now());
 
   try {
@@ -89,7 +90,6 @@ export async function handleCreditBalanceFallback(
       },
     });
 
-    fallbackSessions.add(sessionID);
     logger.info("Credit balance fallback triggered", { sessionID, fallbackModel });
 
     await client.tui.showToast({
