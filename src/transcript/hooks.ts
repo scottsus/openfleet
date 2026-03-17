@@ -9,6 +9,7 @@ import {
   handleCreditBalanceFallback,
   isCreditBalanceError,
   isSessionInFallback,
+  markSessionFallback,
 } from "../lib/fallback";
 import { logger } from "../logger";
 import { recordToolResult, recordToolUse, recordUserMessage } from "./recorder";
@@ -108,6 +109,13 @@ export function createTranscriptHooks(ctx: PluginInput) {
     }) as (input: {}, output: { system: string[] }) => Promise<void>,
 
     event: async ({ event }: { event: Event }) => {
+      if (event.type === "session.created") {
+        const { info } = event.properties;
+        if (info.parentID && isSessionInFallback(info.parentID)) {
+          markSessionFallback(info.id);
+        }
+      }
+
       if (event.type === "session.status") {
         const { sessionID, status } = event.properties;
         if (status.type === "retry" && isCreditBalanceError(status.message)) {

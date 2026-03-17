@@ -21,9 +21,14 @@ export function isCreditBalanceError(message: string): boolean {
   return CREDIT_BALANCE_PATTERNS.some((p) => lower.includes(p));
 }
 
-/** Returns true if the given session has previously fallen back to the free model. */
+/** Returns true if the given session or any ancestor has fallen back to the free model. */
 export function isSessionInFallback(sessionID: string): boolean {
   return fallbackSessions.has(sessionID);
+}
+
+/** Marks a session as requiring fallback (used for child session propagation). */
+export function markSessionFallback(sessionID: string): void {
+  fallbackSessions.add(sessionID);
 }
 
 /** Returns the fallback model split into providerID and modelID. */
