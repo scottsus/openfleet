@@ -7,6 +7,9 @@ import * as path from "path";
  * ├── .templates/                      # Templates for new stories/tasks
  * │   └── task-tree.md
  * ├── README.md
+ * ├── VERSION                          # Stamped on init; absence/mismatch = migration needed
+ * ├── migrations/                      # Per-version migration guides
+ * │   └── 0.4.0.md
  * ├── public/                          # Committed — shared knowledge
  * │   ├── docs/                        # Compressed story learnings
  * │   ├── standards/                   # Prescriptive guidelines
@@ -53,6 +56,7 @@ export const PATHS = {
   public: PUBLIC_DIR,
   private: PRIVATE_DIR,
   templates: path.join(OPENFLEET_DIR, ".templates"),
+  versionFile: path.join(OPENFLEET_DIR, "VERSION"),
   statusFile: path.join(PRIVATE_DIR, "status.md"),
   agents: path.join(PRIVATE_DIR, "agents"),
   agentOrchestrator: path.join(PRIVATE_DIR, "agents", "Zeus.md"),

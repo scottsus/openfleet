@@ -16,6 +16,9 @@ files before starting your current task.
 ```
 .openfleet/
 ├── README.md
+├── VERSION                  # Stamped on init; absence/mismatch = migration needed
+├── migrations/              # Per-version migration guides
+│   └── 0.4.0.md
 ├── .templates/              # Templates for new stories/tasks
 │   └── task-tree.md
 ├── public/                  # Committed — shared knowledge

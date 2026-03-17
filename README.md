@@ -11,6 +11,9 @@ Ultra lightweight plugin for persistent memory with subagent orchestration.
 ```
 .openfleet/
 ├── README.md
+├── VERSION
+├── migrations/
+│   └── 0.4.0.md
 |
 ├── public/                      # Shared knowledge
 │   ├── docs/                    # Story write-ups

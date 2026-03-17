@@ -5,8 +5,8 @@ import { sleep } from "./lib/utils";
 import { logger } from "./logger";
 import { createSaveConversationTool } from "./tools/save-conversation";
 import { createTranscriptHooks } from "./transcript";
-import { initializeDirectories } from "./utils/directory-init";
-import { showSpinnerToast } from "./utils/toast";
+import { checkMigrationNeeded, initializeDirectories } from "./utils/directory-init";
+import { showSpinnerToast, showToast } from "./utils/toast";
 
 const OpenfleetPlugin: Plugin = async (ctx) => {
   initializeDirectories();
@@ -31,7 +31,17 @@ const OpenfleetPlugin: Plugin = async (ctx) => {
         const props = event.properties as { info?: { parentID?: string } } | undefined;
         if (!props?.info?.parentID) {
           setTimeout(async () => {
-            await showFleetToast(ctx);
+            if (checkMigrationNeeded()) {
+              await showToast(ctx, {
+                title: "⚠️ Openfleet Migration Required",
+                message:
+                  "Copy this: 'github.com/scottsus/openfleet/issues/11' to the chat, to migrate to v0.4.0",
+                variant: "warning",
+                duration: 10000,
+              });
+            } else {
+              await showFleetToast(ctx);
+            }
           }, 0);
         }
       }
