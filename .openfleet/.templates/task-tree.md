@@ -64,7 +64,7 @@ feat/auth-redesign
  ├──► task/06-10_refresh-tokens (created 2026-01-19) ← YOU ARE HERE
  │     Phases: R✅ H✅ L🔄 I⏳
  │     Branch: feat/auth-redesign/refresh-tokens
- │     Agent: Apollo (reviewing LLD.md)
+ │     Agent: Architect (reviewing LLD.md)
  │     │
  │     └──► branch/temp-skip-rotation (created 2026-01-20) ⏸️ escalated
  │           Issue: Complex token rotation bug
@@ -76,7 +76,7 @@ feat/auth-redesign
 
 ---
 
-## Instructions for Zeus
+## Instructions for Orchestrator
 
 **CRITICAL**: Update this file after EVERY change to THIS story:
 
@@ -91,7 +91,7 @@ The tree MUST show:
 
 1. Full hierarchy (task → subtask → branches)
 2. Current position marker (`← YOU ARE HERE`)
-3. Active agents (`← Hercules working`)
+3. Active agents (`← Builder working`)
 4. Phase progress for each node (R/H/L/I with status)
 5. Branch status (merged, blocked, escalated)
 6. Git branch names

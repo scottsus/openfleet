@@ -2,7 +2,8 @@ import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
 
-import { OPENFLEET_DIR } from "../config";
+import { version } from "../../package.json";
+import { OPENFLEET_DIR, PATHS } from "../config";
 import { logger } from "../logger";
 
 const TEMPLATES_DIR = path.join(
@@ -18,6 +19,13 @@ export function initializeDirectories(): void {
 
   copyDirectorySync(TEMPLATES_DIR, OPENFLEET_DIR);
   logger.info("Initialized .openfleet directory");
+}
+
+export function checkMigrationNeeded(): boolean {
+  if (!fs.existsSync(OPENFLEET_DIR)) return false;
+  if (!fs.existsSync(PATHS.versionFile)) return true;
+  const installedVersion = fs.readFileSync(PATHS.versionFile, "utf-8").trim();
+  return installedVersion !== version;
 }
 
 function copyDirectorySync(src: string, dest: string): void {
