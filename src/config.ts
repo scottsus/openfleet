@@ -39,7 +39,6 @@ import * as path from "path";
  *     ├── experience/                  # Learned knowledge (runbooks, lessons)
  *     │   ├── runbooks/
  *     │   └── lessons/
- *     ├── reviews/
  *     ├── transcripts/
  *     └── openfleet.log
  */
@@ -66,7 +65,6 @@ export const PATHS = {
   experience: path.join(PRIVATE_DIR, "experience"),
   runbooks: path.join(PRIVATE_DIR, "experience", "runbooks"),
   lessons: path.join(PRIVATE_DIR, "experience", "lessons"),
-  reviews: path.join(PRIVATE_DIR, "reviews"),
   transcripts: path.join(PRIVATE_DIR, "transcripts"),
   logFile: path.join(PRIVATE_DIR, "openfleet.log"),
   docs: path.join(PUBLIC_DIR, "docs"),

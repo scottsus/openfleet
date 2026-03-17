@@ -39,7 +39,6 @@ files before starting your current task.
     ├── experience/          # Self-healing long term memory
     │   ├── runbooks/        # Used for recurring tasks
     │   └── lessons/         # Used for learning from past mistakes and pitfalls
-    ├── reviews/             # Human review artifacts
     └── transcripts/         # Agent session transcripts
 ```
 
