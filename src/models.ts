@@ -29,3 +29,4 @@ export const models = {
 export const defaultModel = models.anthropic.sonnet;
 export const bigModel = defaultModel;
 export const smallModel = defaultModel;
+export const fallbackModel = models.freeModels.minimaxM25Free;
