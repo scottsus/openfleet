@@ -2,7 +2,14 @@ import { existsSync, readFileSync } from "fs";
 import path from "path";
 
 import type { PluginInput } from "@opencode-ai/plugin";
+import type { Event } from "@opencode-ai/sdk";
 
+import {
+  getFallbackModelOverride,
+  handleCreditBalanceFallback,
+  isCreditBalanceError,
+  isSessionInFallback,
+} from "../lib/fallback";
 import { logger } from "../logger";
 import { recordToolResult, recordToolUse, recordUserMessage } from "./recorder";
 import type { SessionInfo } from "./recorder";
@@ -50,6 +57,15 @@ export function createTranscriptHooks(ctx: PluginInput) {
       await recordUserMessage(session, output.message as any, output.parts as any);
     },
 
+    "chat.model": async (
+      input: { sessionID: string; agent: string; model: { providerID: string; modelID: string } },
+      output: { model: { providerID: string; modelID: string } },
+    ) => {
+      if (isSessionInFallback(input.sessionID)) {
+        output.model = getFallbackModelOverride();
+      }
+    },
+
     "tool.execute.before": async (
       input: { sessionID: string; tool: string; callID: string },
       output: { args: unknown },
@@ -90,5 +106,38 @@ export function createTranscriptHooks(ctx: PluginInput) {
         });
       }
     }) as (input: {}, output: { system: string[] }) => Promise<void>,
+
+    event: async ({ event }: { event: Event }) => {
+      if (event.type === "session.status") {
+        const { sessionID, status } = event.properties;
+        if (status.type === "retry" && isCreditBalanceError(status.message)) {
+          await handleCreditBalanceFallback(ctx.client, sessionID);
+        }
+      }
+
+      if (event.type === "session.error") {
+        const { sessionID, error } = event.properties;
+        if (
+          sessionID &&
+          error &&
+          "message" in error.data &&
+          isCreditBalanceError(String(error.data.message))
+        ) {
+          await handleCreditBalanceFallback(ctx.client, sessionID);
+        }
+      }
+
+      if (event.type === "message.updated") {
+        const { info } = event.properties;
+        if (info.role === "assistant" && info.error) {
+          if (
+            "message" in info.error.data &&
+            isCreditBalanceError(String(info.error.data.message))
+          ) {
+            await handleCreditBalanceFallback(ctx.client, info.sessionID);
+          }
+        }
+      }
+    },
   };
 }
