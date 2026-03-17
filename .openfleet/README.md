@@ -40,8 +40,7 @@ files before starting your current task.
     │   ├── runbooks/        # Used for recurring tasks
     │   └── lessons/         # Used for learning from past mistakes and pitfalls
     ├── reviews/             # Human review artifacts
-    ├── sessions/            # Agent transcripts / journals
-    └── transcripts/         # Legacy transcripts
+    └── transcripts/         # Agent session transcripts
 ```
 
 ## Git worktree visualization

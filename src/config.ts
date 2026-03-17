@@ -40,7 +40,6 @@ import * as path from "path";
  *     │   ├── runbooks/
  *     │   └── lessons/
  *     ├── reviews/
- *     ├── sessions/
  *     ├── transcripts/
  *     └── openfleet.log
  */
@@ -63,7 +62,6 @@ export const PATHS = {
   agentBuilder: path.join(PRIVATE_DIR, "agents", "Builder.md"),
   agentValidator: path.join(PRIVATE_DIR, "agents", "Validator.md"),
   agentIntrospector: path.join(PRIVATE_DIR, "agents", "Introspector.md"),
-  sessions: path.join(PRIVATE_DIR, "sessions"),
   stories: path.join(PRIVATE_DIR, "stories"),
   experience: path.join(PRIVATE_DIR, "experience"),
   runbooks: path.join(PRIVATE_DIR, "experience", "runbooks"),
