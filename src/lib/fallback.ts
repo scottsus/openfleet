@@ -11,6 +11,7 @@ const CREDIT_BALANCE_PATTERNS = [
 ];
 
 const fallbackInProgress = new Set<string>();
+const fallbackSessions = new Set<string>();
 const lastFallbackTime = new Map<string, number>();
 const COOLDOWN_MS = 30_000;
 
@@ -18,6 +19,17 @@ const COOLDOWN_MS = 30_000;
 export function isCreditBalanceError(message: string): boolean {
   const lower = message.toLowerCase();
   return CREDIT_BALANCE_PATTERNS.some((p) => lower.includes(p));
+}
+
+/** Returns true if the given session has previously fallen back to the free model. */
+export function isSessionInFallback(sessionID: string): boolean {
+  return fallbackSessions.has(sessionID);
+}
+
+/** Returns the fallback model split into providerID and modelID. */
+export function getFallbackModelOverride(): { providerID: string; modelID: string } {
+  const [providerID, modelID] = fallbackModel.split("/") as [string, string];
+  return { providerID, modelID };
 }
 
 /**
@@ -77,6 +89,7 @@ export async function handleCreditBalanceFallback(
       },
     });
 
+    fallbackSessions.add(sessionID);
     logger.info("Credit balance fallback triggered", { sessionID, fallbackModel });
 
     await client.tui.showToast({

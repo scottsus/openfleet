@@ -4,7 +4,12 @@ import path from "path";
 import type { PluginInput } from "@opencode-ai/plugin";
 import type { Event } from "@opencode-ai/sdk";
 
-import { handleCreditBalanceFallback, isCreditBalanceError } from "../lib/fallback";
+import {
+  getFallbackModelOverride,
+  handleCreditBalanceFallback,
+  isCreditBalanceError,
+  isSessionInFallback,
+} from "../lib/fallback";
 import { logger } from "../logger";
 import { recordToolResult, recordToolUse, recordUserMessage } from "./recorder";
 import type { SessionInfo } from "./recorder";
@@ -50,6 +55,15 @@ export function createTranscriptHooks(ctx: PluginInput) {
       }
       const session = await getSessionInfo(ctx, input.sessionID);
       await recordUserMessage(session, output.message as any, output.parts as any);
+    },
+
+    "chat.model": async (
+      input: { sessionID: string; agent: string; model: { providerID: string; modelID: string } },
+      output: { model: { providerID: string; modelID: string } },
+    ) => {
+      if (isSessionInFallback(input.sessionID)) {
+        output.model = getFallbackModelOverride();
+      }
     },
 
     "tool.execute.before": async (
