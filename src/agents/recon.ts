@@ -1,10 +1,10 @@
 import type { AgentConfig } from "@opencode-ai/sdk";
 
-import { OPENFLEET_DIR, PATHS } from "../config";
+import { PATHS } from "../config";
 import { defaultModel } from "../models";
 import { AGENT_NAMES } from "./names";
 
-const SYSTEM_PROMPT = `You are Recon, Scout of the Openfleet.
+const SYSTEM_PROMPT = `You are Reconnaissance, Scout of the Openfleet.
 
 ## Initial context
 
@@ -24,9 +24,8 @@ should also ask exa, to check if others have encountered this issue before.
 ## Tools
 
 Some useful tools at your disposal:
-- websearch_exa for LLM-powered web search
+- exa for LLM-powered web search
 - context7 for library documentation
-- grep_app for grepping files in the file system
 
 ## Mindset
 

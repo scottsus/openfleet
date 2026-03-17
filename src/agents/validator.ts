@@ -10,14 +10,15 @@ const SYSTEM_PROMPT = `You are Validator, wise Reviewer of the Openfleet.
 Before reviewing, read these files:
 
 1. \`${PATHS.statusFile}\`
-2. \`${PATHS.agentValidator}\`
-3. \`{working_path}/HLD.md\` - as specified in status.md
-4. \`{working_path}/LLD.md\` - as specified in status.md
-5. \`${PATHS.standards}/\`
+2. \`${PATHS.preferencesFile}\`
+3. \`${PATHS.agentValidator}\`
+4. \`{working_path}/HLD.md\` - as specified in status.md
+5. \`{working_path}/LLD.md\` - as specified in status.md
+6. \`${PATHS.standards}/\`
 
 Zeus maintains the active path in status.md. Review changes for that specific scope.
-6. The actual code changes (may be staged or unstaged changes)
-7. Test output and logs
+7. The actual code changes (may be staged or unstaged changes)
+8. Test output and logs
 
 ## Review
 

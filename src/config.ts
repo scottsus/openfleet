@@ -39,6 +39,7 @@ import * as path from "path";
  *     │               ├── Implementation.md
  *     │               └── branches/
  *     ├── status.md                    # Anchor point - always read first
+ *     ├── preferences.md               # User preferences and coding standards
  *     ├── experience/                  # Learned knowledge (runbooks, lessons)
  *     │   ├── runbooks/
  *     │   └── lessons/
@@ -58,6 +59,7 @@ export const PATHS = {
   templates: path.join(OPENFLEET_DIR, ".templates"),
   versionFile: path.join(OPENFLEET_DIR, "VERSION"),
   statusFile: path.join(PRIVATE_DIR, "status.md"),
+  preferencesFile: path.join(PRIVATE_DIR, "preferences.md"),
   agents: path.join(PRIVATE_DIR, "agents"),
   agentOrchestrator: path.join(PRIVATE_DIR, "agents", "Zeus.md"),
   agentRecon: path.join(PRIVATE_DIR, "agents", "Recon.md"),
