@@ -26,7 +26,7 @@ export const models = {
   },
 } as const;
 
-export const defaultModel = models.anthropic.sonnet;
+export const defaultModel = process.env.OPENFLEET_MODEL ?? models.anthropic.sonnet;
 export const bigModel = defaultModel;
 export const smallModel = defaultModel;
 export const fallbackModel = models.freeModels.minimaxM25Free;
