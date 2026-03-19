@@ -30,3 +30,8 @@ export const defaultModel = process.env.OPENFLEET_MODEL ?? models.anthropic.sonn
 export const bigModel = defaultModel;
 export const smallModel = defaultModel;
 export const fallbackModel = models.freeModels.minimaxM25Free;
+
+export function parseModel(model: string): { providerID: string; modelID: string } {
+  const [providerID, ...rest] = model.split("/");
+  return { providerID, modelID: rest.join("/") };
+}

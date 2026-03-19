@@ -12,20 +12,62 @@ const TEMPLATES_DIR = path.join(
   ".openfleet",
 );
 
+const BUNDLED_MIGRATIONS_DIR = path.join(TEMPLATES_DIR, "migrations");
+
 export function initializeDirectories(): void {
   if (fs.existsSync(OPENFLEET_DIR)) {
     return;
   }
 
   copyDirectorySync(TEMPLATES_DIR, OPENFLEET_DIR);
+  stampVersion();
   logger.info("Initialized .openfleet directory");
 }
 
-export function checkMigrationNeeded(): boolean {
-  if (!fs.existsSync(OPENFLEET_DIR)) return false;
-  if (!fs.existsSync(PATHS.versionFile)) return true;
-  const installedVersion = fs.readFileSync(PATHS.versionFile, "utf-8").trim();
-  return installedVersion !== version;
+/**
+ * Returns pending migration versions between the installed VERSION and current package version.
+ *
+ * Scans the bundled templates migrations dir (not runtime .openfleet/migrations/)
+ * since pre-0.4.0 installs won't have a migrations/ folder at all.
+ */
+export function getPendingMigrations(): string[] {
+  if (!fs.existsSync(OPENFLEET_DIR)) return [];
+  if (!fs.existsSync(BUNDLED_MIGRATIONS_DIR)) return [];
+
+  const installedVersion = readInstalledVersion();
+
+  return fs
+    .readdirSync(BUNDLED_MIGRATIONS_DIR)
+    .filter((f) => f.endsWith(".md"))
+    .map((f) => f.replace(/\.md$/, ""))
+    .filter((v) => compareSemver(v, installedVersion) > 0 && compareSemver(v, version) <= 0)
+    .sort(compareSemver);
+}
+
+export function stampVersion(): void {
+  fs.writeFileSync(PATHS.versionFile, version);
+}
+
+function readInstalledVersion(): string {
+  if (!fs.existsSync(PATHS.versionFile)) return "0.0.0";
+
+  const raw = fs.readFileSync(PATHS.versionFile, "utf-8").trim();
+  const parts = raw.split(".").map(Number);
+  if (parts.length !== 3 || parts.some(isNaN)) return "0.0.0";
+
+  return raw;
+}
+
+// NOTE: Does not handle pre-release versions (e.g. 0.4.0-beta.1).
+// If pre-release support is ever needed, use a proper semver library.
+function compareSemver(a: string, b: string): number {
+  const pa = a.split(".").map(Number);
+  const pb = b.split(".").map(Number);
+  for (let i = 0; i < 3; i++) {
+    const diff = (pa[i] || 0) - (pb[i] || 0);
+    if (diff !== 0) return diff;
+  }
+  return 0;
 }
 
 function copyDirectorySync(src: string, dest: string): void {
