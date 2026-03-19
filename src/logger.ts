@@ -1,11 +1,10 @@
 import { appendFileSync, existsSync } from "fs";
-import { join } from "path";
 
-import { OPENFLEET_DIR } from "./config";
+import { OPENFLEET_DIR, PATHS } from "./config";
 
 type LogLevel = "debug" | "info" | "warn" | "error";
 
-const LOG_FILE = join(OPENFLEET_DIR, "openfleet.log");
+const LOG_FILE = PATHS.logFile;
 
 let dirVerified = false;
 
