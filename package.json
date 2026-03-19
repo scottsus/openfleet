@@ -1,6 +1,6 @@
 {
   "name": "openfleet",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "SPARR framework agents + infinite context for OpenCode",
   "type": "module",
   "main": "./dist/index.js",
