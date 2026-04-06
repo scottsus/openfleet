@@ -1,7 +1,6 @@
 import type { AgentConfig } from "@opencode-ai/sdk";
 
 import { PATHS } from "../config";
-import { defaultModel } from "../models";
 
 const SYSTEM_PROMPT = `You are Introspector, introspective Reflector of the Openfleet.
 
@@ -71,7 +70,6 @@ at the start of each session. Use it for:
 export const introspectorAgent: AgentConfig = {
   description: "Introspector - Reflector",
   mode: "subagent",
-  model: defaultModel,
   prompt: SYSTEM_PROMPT,
   color: "#C349E9",
 };

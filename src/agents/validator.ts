@@ -1,7 +1,6 @@
 import type { AgentConfig } from "@opencode-ai/sdk";
 
 import { PATHS } from "../config";
-import { defaultModel } from "../models";
 
 const SYSTEM_PROMPT = `You are Validator, wise Reviewer of the Openfleet.
 
@@ -45,7 +44,6 @@ at the start of each session. Update it with:
 export const validatorAgent: AgentConfig = {
   description: "Validator - Reviewer",
   mode: "subagent",
-  model: defaultModel,
   prompt: SYSTEM_PROMPT,
   color: "#018D40",
 };

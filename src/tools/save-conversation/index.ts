@@ -2,7 +2,6 @@ import { tool } from "@opencode-ai/plugin";
 import type { PluginInput } from "@opencode-ai/plugin";
 
 import { logger } from "../../logger";
-import { defaultModel, parseModel } from "../../models";
 
 export function createSaveConversationTool(ctx: PluginInput) {
   return tool({
@@ -18,8 +17,21 @@ Use this tool:
     },
 
     async execute(_args, context) {
-      const { sessionID } = context;
-      const { providerID, modelID } = parseModel(defaultModel);
+      const { sessionID, messageID } = context;
+
+      const { data: messages } = await ctx.client.session.messages({
+        path: { id: sessionID },
+      });
+      const currentMsg = messages?.find((m) => m.info.id === messageID);
+      const info = currentMsg?.info;
+
+      const providerID = info?.role === "assistant" ? info.providerID : info?.model?.providerID;
+      const modelID = info?.role === "assistant" ? info.modelID : info?.model?.modelID;
+
+      if (!providerID || !modelID) {
+        logger.error("Cannot determine model for summarization", { sessionID, messageID });
+        return "❌ Failed to determine model for context compaction.";
+      }
 
       ctx.client.session
         .summarize({

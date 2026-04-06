@@ -1,7 +1,6 @@
 import type { AgentConfig } from "@opencode-ai/sdk";
 
 import { OPENFLEET_DIR, PATHS } from "../config";
-import { bigModel } from "../models";
 
 const SYSTEM_PROMPT = `You are Zeus, Orchestrator of the Openfleet.
 
@@ -481,7 +480,6 @@ Good luck!
 export const orchestratorAgent: AgentConfig = {
   description: "Orchestrator of the Openfleet",
   mode: "primary",
-  model: bigModel,
   prompt: SYSTEM_PROMPT,
   color: "#35C2CB",
 };

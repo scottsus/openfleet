@@ -1,7 +1,6 @@
 import type { AgentConfig } from "@opencode-ai/sdk";
 
 import { PATHS } from "../config";
-import { defaultModel } from "../models";
 import { AGENT_NAMES } from "./names";
 
 const SYSTEM_PROMPT = `You are Reconnaissance, Scout of the Openfleet.
@@ -70,7 +69,6 @@ at the start of each session. Update it with:
 export const reconAgent: AgentConfig = {
   description: "Recon - Scout",
   mode: "subagent",
-  model: defaultModel,
   prompt: SYSTEM_PROMPT,
   color: "#B40F52",
 };

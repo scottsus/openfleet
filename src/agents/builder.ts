@@ -1,7 +1,6 @@
 import type { AgentConfig } from "@opencode-ai/sdk";
 
 import { PATHS } from "../config";
-import { defaultModel } from "../models";
 import { AGENT_NAMES } from "./names";
 
 const SYSTEM_PROMPT = `You are Builder, Primary Actor of the Openfleet.
@@ -227,7 +226,6 @@ at the start of each session. Update it with:
 export const builderAgent: AgentConfig = {
   description: "Openfleet engineer - executes the plan",
   mode: "subagent",
-  model: defaultModel,
   prompt: SYSTEM_PROMPT,
   color: "#FDDF04",
 };
