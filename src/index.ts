@@ -3,7 +3,6 @@ import type { Plugin, PluginInput } from "@opencode-ai/plugin";
 import { configureAgents } from "./agents";
 import { sleep } from "./lib/utils";
 import { logger } from "./logger";
-import { createSaveConversationTool } from "./tools/save-conversation";
 import { createTranscriptHooks } from "./transcript";
 import { getPendingMigrations, initializeDirectories, stampVersion } from "./utils/directory-init";
 import { showSpinnerToast, showToast } from "./utils/toast";
@@ -12,15 +11,14 @@ const OpenfleetPlugin: Plugin = async (ctx) => {
   initializeDirectories();
 
   logger.info("Plugin loaded");
-  const saveConversation = createSaveConversationTool(ctx);
   const transcriptHooks = createTranscriptHooks(ctx);
 
   const { event: transcriptEvent, ...otherTranscriptHooks } = transcriptHooks;
 
   return {
-    tool: {
-      save_conversation: saveConversation,
-    },
+    // save_conversation disabled — compaction hangs due to unknown model/credential issue
+    // see: https://github.com/user/starfleet/issues/TBD
+    tool: {},
 
     config: async (config) => {
       configureAgents(config);
